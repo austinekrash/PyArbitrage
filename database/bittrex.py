@@ -1,7 +1,7 @@
 import psycopg2
 import requests
 import json
-import re
+from sup import find_asset
 
 try:
     conn = psycopg2.connect("dbname='arbitraggio' user='ale' host='localhost' password='pippo'")
@@ -19,36 +19,11 @@ list_of_records = []
 sql = """INSERT INTO bittrex(symbol, quote_asset, base_asset, symbol_std) VALUES(%s, %s, %s, %s);"""
 
 for index in range(len(symbols)):
-    pass
-    #print(symbols[index]['MarketName'])
+    asset = find_asset(symbols[index]['MarketName'])
+    record = [symbols[index]['MarketName'], asset[0].lower(), asset[1].lower(), asset[0].lower() + asset[1].lower()]
+    list_of_records.append(record)
 
-def find_base_asset(symbol):
-    #da finire
-    reUsdt = re.compile(r"\busdt\b")
-    reBtc = re.compile(r"\bbtc\b")
-    reEth = re.compile(r"\beth\b")
-    reUsd = re.compile(r"\busd\b")
-    if(reUsdt.search(symbol[:4]) is not None):
-        return [symbol[5:], 'usdt']
-    elif(reBtc.findall(symbol[:4]) is not None):
-        return [symbol[3:], 'btc']
-    elif(reEth.findall(symbol[:4]) is not None):
-        return [symbol[3:], 'eth']
-    elif(reUsd.findall(symbol[:4]) is not None):
-        return [symbol[3:], 'usd']
-
-
-print(find_base_asset('USD_DFER'))
-
-#usdt, usd, btc, eth
-    #record = [symbols[index]['MarketName'], symbols[index]['quoteAsset'], symbols[index]['baseAsset'], (symbols[index]['symbol']).lower()]
-    #list_of_records.append(record)
-
-#record_to_insert = ['ETHBTC', 'BTC', 'ETH', 'ethbtc']
-#cur.execute(sql, record_to_insert)
-
-
-#cur.executemany(sql, list_of_records)
-#conn.commit()
-#count = cur.rowcount
-#print (count, "Record inserted successfully into binance table")
+cur.executemany(sql, list_of_records)
+conn.commit()
+count = cur.rowcount
+print (count, "Record inserted successfully into bittrex table")
