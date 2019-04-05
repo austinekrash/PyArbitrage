@@ -16,7 +16,7 @@ symbols = datastore.get('result')
 list_of_records = []
 
 
-sql = """INSERT INTO bittrex(symbol, quote_asset, base_asset, symbol_std) VALUES(%s, %s, %s, %s);"""
+sql = """INSERT INTO bittrex(symbol, quote_asset, base_asset, symbol_std) VALUES(%s, %s, %s, %s) ON CONFLICT (symbol) DO NOTHING;"""
 
 for index in range(len(symbols)):
     asset = find_asset(symbols[index]['MarketName'])

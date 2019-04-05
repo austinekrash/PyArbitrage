@@ -18,7 +18,7 @@ for index in range(len(symbols)):
     record = [symbols[index]['symbol'], symbols[index]['quoteAsset'], symbols[index]['baseAsset'], (symbols[index]['symbol']).lower()]
     list_of_records.append(record)
 
-sql = """INSERT INTO binance(symbol, quote_asset, base_asset, symbol_std) VALUES(%s, %s, %s, %s);"""
+sql = """INSERT INTO binance(symbol, quote_asset, base_asset, symbol_std) VALUES(%s, %s, %s, %s) ON CONFLICT (symbol) DO NOTHING;"""
 #record_to_insert = ['ETHBTC', 'BTC', 'ETH', 'ethbtc']
 #cur.execute(sql, record_to_insert)
 cur.executemany(sql, list_of_records)
