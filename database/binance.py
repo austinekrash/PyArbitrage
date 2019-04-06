@@ -11,18 +11,23 @@ cur = conn.cursor()
 
 r = requests.get("https://binance.com/api/v1/exchangeInfo")
 datastore = json.loads(r.content)
-symbols = datastore.get('symbols')
+pairs = datastore.get('symbols')
 list_of_records = []
 
-for index in range(len(symbols)):
-    record = [symbols[index]['symbol'], symbols[index]['quoteAsset'], symbols[index]['baseAsset'], (symbols[index]['symbol']).lower()]
+for index in range(len(pairs)):
+    baseAsset = pairs[index].get('baseAsset')
+    quoteAsset = pairs[index].get('quoteAsset')
+    assets = [baseAsset, quoteAsset]
+    assets.sort()
+    record = [pairs[index].get("symbol"), baseAsset.upper(), quoteAsset.upper(), assets[0].lower()+assets[1].lower()]
     list_of_records.append(record)
 
-sql = """INSERT INTO binance(symbol, quote_asset, base_asset, symbol_std) VALUES(%s, %s, %s, %s) ON CONFLICT (symbol) DO NOTHING;"""
-#record_to_insert = ['ETHBTC', 'BTC', 'ETH', 'ethbtc']
-#cur.execute(sql, record_to_insert)
+sql = """INSERT INTO binance(symbol, base_asset, quote_asset, symbol_std) VALUES(%s, %s, %s, %s) ON CONFLICT (symbol) DO NOTHING;"""
 cur.executemany(sql, list_of_records)
 conn.commit()
 count = cur.rowcount
-print (count, "Record inserted successfully into binance table")
-
+print (count, "Record inserted successfully into BINANCE table")
+if(count != len(pairs)):
+    print("#n of items inserted differs from those received: "+count+" - "+len(pairs))
+cur.close()
+conn.close()
