@@ -23,6 +23,8 @@ for index in range(len(a)):
     if("Minimum Withdrawal:" in a[index][1]):
         min_widthdrawl = a[index][1].split('Minimum Withdrawal:')[1].split("'>")[0]
         print("min_with: "+min_widthdrawl)
+    else:
+        min_widthdrawl = '-'
     withdrawal = a[index][1].split('>')[1].split("<")[0]
     print("withdrawal: "+withdrawal)
     print(str(a[index][2])+'\n')  #Deposit
