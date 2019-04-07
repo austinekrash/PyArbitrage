@@ -57,7 +57,7 @@ def insert_in_db(records_all):
     cur.executemany(sql, records_all)
     conn.commit()
     count = cur.rowcount
-    print (count, "Record inserted successfully into BITFINEX table")
+    print (count, "Record inserted successfully into Fee table")
     if(count != len(records_all)):
         print("#n of items inserted differs from those received: "+str(count)+" - "+str(len(records_all)))
     cur.close()
