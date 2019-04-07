@@ -1,5 +1,7 @@
 import requests
 import json
+import psycopg2
+
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
@@ -48,39 +50,40 @@ def get_record_coin(url_info, driver):
         records_coin.append([symbol, exchange_name, name, float(min_withdrawal), float(withdrawal), float(deposit), float(maker), float(taker)])
     return records_coin
 
-def insert_in_db(records_all):
+def insert_in_db(records, conn, cur):
+    sql = """INSERT INTO fee(symbol, exchange, name_extend, min_widthdrawal, withdrawal, deposit, maker, taker) VALUES(%s, %s, %s, %s, %s, %s, %s, %s) ON CONFLICT(symbol,exchange) DO NOTHING;"""
+    cur.executemany(sql, records)
+    conn.commit()
+
+def connect_db():
     try:
         conn = psycopg2.connect("dbname='arbitraggio' user='ale' host='localhost' password='pippo'")
     except:
         print("I am unable to connect to the database")
     cur = conn.cursor()
-    sql = """INSERT INTO fee(symbol, exchange, name_extend, min_widthdrawal, withdrawal, deposit, maker, taker) VALUES(%s, %s, %s, %s, %s, %s, %s, %s) ON CONFLICT (symbol) DO NOTHING;"""
-    cur.executemany(sql, records_all)
-    conn.commit()
-    count = cur.rowcount
-    print (count, "Record inserted successfully into Fee table")
-    if(count != len(records_all)):
-        print("#n of items inserted differs from those received: "+str(count)+" - "+str(len(records_all)))
+    return conn, cur
+
+def close_db(conn, cur):
     cur.close()
     conn.close()
+
 
 def main():
     id_crypto = 1
     options = Options()  #Needed since no display
     options.headless = True
+    conn, cur = connect_db()
     driver = webdriver.Firefox(options=options)
-    records_all = []
-    while id_crypto < 3:
+    while True:
         print(id_crypto)
         url_info = 'https://www.feexplorer.io/coin/'+str(id_crypto)+'/'
         records_coin = get_record_coin(url_info, driver)
         if(records_coin is -1):
             break
-        records_all.extend(records_coin)
+        insert_in_db(records_coin, conn, cur)
         id_crypto = id_crypto + 1
     driver.quit()
-    #insert_in_db(records_all)
-    print(records_all)
+    close_db(conn, cur)
     #Exchange, Min-with, with, (espresso in coin corrente) deposit, maker, taker (ultimi due in percentuale)
 
 main()
