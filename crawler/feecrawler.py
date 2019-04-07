@@ -5,6 +5,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.firefox.options import Options
 
 def get_record_coin(url_info, driver):
     driver.get(url_info)
@@ -53,7 +54,7 @@ def insert_in_db(records_all):
     except:
         print("I am unable to connect to the database")
     cur = conn.cursor()
-    sql = """INSERT INTO bitfinex(symbol, base_asset, quote_asset, symbol_std) VALUES(%s, %s, %s, %s) ON CONFLICT (symbol) DO NOTHING;"""
+    sql = """INSERT INTO fee(symbol, exchange, name_extend, min_widthdrawal, withdrawal, deposit, maker, taker) VALUES(%s, %s, %s, %s, %s, %s, %s, %s) ON CONFLICT (symbol) DO NOTHING;"""
     cur.executemany(sql, records_all)
     conn.commit()
     count = cur.rowcount
@@ -65,7 +66,9 @@ def insert_in_db(records_all):
 
 def main():
     id_crypto = 1
-    driver = webdriver.Firefox()
+    options = Options()  #Needed since no display
+    options.headless = True
+    driver = webdriver.Firefox(options=options)
     records_all = []
     while id_crypto < 3:
         print(id_crypto)
