@@ -31,6 +31,7 @@ class Binance:
 
 
     def get_price_pairs(self, pair_symbol):
+        print("prima del for")
         for i in self._json:
             print(i)
             if i['symbol'].lower() == pair_symbol.lower():
