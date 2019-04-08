@@ -25,15 +25,14 @@ class Binance:
     def sync(self):
         try:
             r = requests.get(self._url)
-            print('dovrei assegnarlo...............................--')
             self._json = r.content
-            print('booooooooh...............................--')
         except (r.status_code != 200):
             raise Exception('Some problems retrieving price: '+r.status_code)
 
 
     def get_price_pairs(self, pair_symbol):
         for i in self._json:
+            print(i)
             if i['symbol'].lower() == pair_symbol.lower():
                 print("[BINANCE] "+i['price']+" "+i['symbol'])
                 return float(i['price'])
