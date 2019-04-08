@@ -1,11 +1,11 @@
 import psycopg2
 import requests
 import json
-import binance
-import bitfinex
-import bittrex
-import cex
-import poloniex
+from binance import Binance
+from bitfinex import Bitfinex
+from bittrex import Bittrex
+from cex import Cex
+from poloniex import Poloniex
 
 def percentage(cryptoIntersection):
     exchange1 = (cryptoIntersection[3])[0].upper() + (cryptoIntersection[3])[1:]
