@@ -26,11 +26,16 @@ def percentage(cryptoIntersection):
 
 intersectionView = []
 perc = []
-Binance = Binance().Factory().sync()
-Bittrex = Bittrex().Factory().sync()
-Bitfinex = Bitfinex().Factory().sync()
-Cex = Cex().Factory().sync()
-Poloniex = Poloniex().Factory().sync()
+Binance = Binance().Factory()
+Binance.sync()
+Bittrex = Bittrex().Factory()
+Bittrex.sync()
+Bitfinex = Bitfinex().Factory()
+Bitfinex.sync()
+Cex = Cex().Factory()
+Cex.sync()
+Poloniex = Poloniex().Factory()
+Poloniex.sync()
 
 try:
     conn = psycopg2.connect("dbname='arbitraggio' user='ale' host='localhost' password='pippo'")
