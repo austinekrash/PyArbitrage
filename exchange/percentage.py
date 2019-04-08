@@ -48,10 +48,10 @@ for view in intersectionView:
     for x in cur.fetchall():#prendo tutte le tuple per ogni view
         cryptoIntersection.append(x)
         for i in cryptoIntersection:
-            print(i)
+            #print(i)
             
-            #perc.append(percentage(i))
-            #print(percentage(i))
+            perc.append(percentage(i))
+            print(percentage(i))
             
             #chiamo api prezzo su symbol
             #inserisco in perc la coppia o tripla symbol std_symbol percentuale
