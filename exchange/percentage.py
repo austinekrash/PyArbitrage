@@ -43,11 +43,9 @@ for x in records:
 #per ogni exchange prendo la lista delle crypto
 for view in intersectionView:
     cur.execute("SELECT * FROM "+view)
-    print(view)
     cryptoIntersection = []
     symbol = []
     for x in cur.fetchall():#prendo tutte le tuple per ogni view
-        print(x)
         cryptoIntersection.append(x)
         for i in cryptoIntersection:
             print(i)
