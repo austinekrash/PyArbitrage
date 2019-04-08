@@ -16,7 +16,8 @@ def percentage(cryptoIntersection):
     classe = eval(exchange1)().Factory()
     classe.sync()
     price1 = classe.get_price_pairs(symbol1)
-    classe2 = eval(exchange2)().Factory().sync()
+    classe2 = eval(exchange2)().Factory()
+    classe2.sync()
     price2 = classe2.get_price_pairs(symbol2)
     if(price1 >= price2):
         perc = (price1 - price2) / price2 * 100
