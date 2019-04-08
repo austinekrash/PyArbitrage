@@ -59,13 +59,11 @@ for view in intersectionView:
         cryptoIntersection.append(x)
         for i in cryptoIntersection:
             
-            perc.append(percentage(i))
-            print(len(perc))
-            
+            perc.append(percentage(i))            
             #chiamo api prezzo su symbol
             #inserisco in perc la coppia o tripla symbol std_symbol percentuale
             #non ha senso prendere anche il prezzo, perchè il prezzo va preso subito prima della vednita/Acquisto
 orderedList = sorted(perc, key=lambda k: k['percentage']) 
-for i in orderedList:
+orderedSet = set(orderedList)
+for i in orderedSet:
     print(i)
-print(len(orderedList))
