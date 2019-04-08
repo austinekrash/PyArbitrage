@@ -19,10 +19,10 @@ for key, value in datastore.items():
     baseAsset = assets[1]
     quoteAsset = assets[0]
     assets.sort()
-    record = [key, baseAsset.upper(), quoteAsset.upper(), assets[0].lower()+assets[1].lower()]
+    record = [key, baseAsset.upper(), quoteAsset.upper(), assets[0].lower()+assets[1].lower(), 'Poloniex']
     list_of_records.append(record)
 
-sql = """INSERT INTO poloniex(symbol, base_asset, quote_asset, symbol_std) VALUES(%s, %s, %s, %s) ON CONFLICT (symbol) DO NOTHING;"""
+sql = """INSERT INTO Poloniex(symbol, base_asset, quote_asset, symbol_std, exchange_name) VALUES(%s, %s, %s, %s, %s) ON CONFLICT (symbol) DO NOTHING;"""
 cur.executemany(sql, list_of_records)
 conn.commit()
 count = len(list_of_records)

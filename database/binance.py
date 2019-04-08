@@ -19,10 +19,10 @@ for index in range(len(pairs)):
     quoteAsset = pairs[index].get('quoteAsset')
     assets = [baseAsset, quoteAsset]
     assets.sort()
-    record = [pairs[index].get("symbol"), baseAsset.upper(), quoteAsset.upper(), assets[0].lower()+assets[1].lower()]
+    record = [pairs[index].get("symbol"), baseAsset.upper(), quoteAsset.upper(), assets[0].lower()+assets[1].lower(), 'Binance']
     list_of_records.append(record)
 
-sql = """INSERT INTO binance(symbol, base_asset, quote_asset, symbol_std) VALUES(%s, %s, %s, %s) ON CONFLICT (symbol) DO NOTHING;"""
+sql = """INSERT INTO Binance(symbol, base_asset, quote_asset, symbol_std, exchange_name) VALUES(%s, %s, %s, %s, %s) ON CONFLICT (symbol) DO NOTHING;"""
 cur.executemany(sql, list_of_records)
 conn.commit()
 count = cur.rowcount

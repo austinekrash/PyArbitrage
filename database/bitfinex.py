@@ -22,10 +22,10 @@ for index in range(len(pairs)):
     assets = [baseAsset, quoteAsset]
     assets.sort()
     primary = 't'+pairs[index]
-    record = [primary, baseAsset.upper(), quoteAsset.upper(), assets[0].lower()+assets[1].lower()]
+    record = [primary, baseAsset.upper(), quoteAsset.upper(), assets[0].lower()+assets[1].lower(), 'Bitfinex']
     list_of_records.append(record)
 
-sql = """INSERT INTO bitfinex(symbol, base_asset, quote_asset, symbol_std) VALUES(%s, %s, %s, %s) ON CONFLICT (symbol) DO NOTHING;"""
+sql = """INSERT INTO Bitfinex(symbol, base_asset, quote_asset, symbol_std, exchange_name) VALUES(%s, %s, %s, %s, %s) ON CONFLICT (symbol) DO NOTHING;"""
 cur.executemany(sql, list_of_records)
 conn.commit()
 count = cur.rowcount

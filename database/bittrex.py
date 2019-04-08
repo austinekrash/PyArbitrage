@@ -21,10 +21,10 @@ for index in range(len(pairs)):
     quoteAsset = pairs[index].get('BaseCurrency')
     assets = [baseAsset, quoteAsset]
     assets.sort()
-    record = [pairs[index].get('MarketName'), baseAsset.upper(), quoteAsset.upper(), assets[0].lower()+assets[1].lower()]
+    record = [pairs[index].get('MarketName'), baseAsset.upper(), quoteAsset.upper(), assets[0].lower()+assets[1].lower(), 'Bittrex']
     list_of_records.append(record)
 
-sql = """INSERT INTO bittrex(symbol, base_asset, quote_asset, symbol_std) VALUES(%s, %s, %s, %s) ON CONFLICT (symbol) DO NOTHING;"""
+sql = """INSERT INTO Bittrex(symbol, base_asset, quote_asset, symbol_std, exchange_name) VALUES(%s, %s, %s, %s, %s) ON CONFLICT (symbol) DO NOTHING;"""
 cur.executemany(sql, list_of_records)
 conn.commit()
 count = cur.rowcount

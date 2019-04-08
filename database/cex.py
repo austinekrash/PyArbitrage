@@ -21,10 +21,10 @@ for index in range(len(pairs)):
     assets = [baseAsset, quoteAsset]
     assets.sort()
     primary = baseAsset+'/'+quoteAsset
-    record = [primary, baseAsset.upper(), quoteAsset.upper(), assets[0].lower()+assets[1].lower()]
+    record = [primary, baseAsset.upper(), quoteAsset.upper(), assets[0].lower()+assets[1].lower(), 'Cex']
     list_of_records.append(record)
 
-sql = """INSERT INTO cex(symbol, base_asset, quote_asset, symbol_std) VALUES(%s, %s, %s, %s) ON CONFLICT (symbol) DO NOTHING;"""
+sql = """INSERT INTO Cex(symbol, base_asset, quote_asset, symbol_std, exchange_name) VALUES(%s, %s, %s, %s, %s) ON CONFLICT (symbol) DO NOTHING;"""
 cur.executemany(sql, list_of_records)
 conn.commit()
 count = cur.rowcount

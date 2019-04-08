@@ -11,7 +11,7 @@ from selenium.webdriver.firefox.options import Options
 
 def get_record_coin(url_info, driver):
     driver.get(url_info)
-    WebDriverWait(driver, 10).until(ec.visibility_of_element_located((By.XPATH, ".//tbody")))
+    WebDriverWait(driver, 20).until(ec.visibility_of_element_located((By.XPATH, ".//tbody")))
 
     if('()' in driver.title):
         print("Scraping ended")
@@ -28,6 +28,8 @@ def get_record_coin(url_info, driver):
     rows = tbody[0].find_elements_by_xpath('.//tr')
     for row in rows:
         cols = row.find_elements_by_xpath('.//td')
+        if(len(cols) == 1):
+            return -2
         exchange_name = cols[0].text
         div = cols[1].find_elements_by_xpath('.//div')
         if not div[0].get_attribute("data-tooltip"):
@@ -47,7 +49,7 @@ def get_record_coin(url_info, driver):
             taker = cols[3].text.split('/')[1]
         else:
             maker = taker = cols[3].text
-        records_coin.append([symbol, exchange_name, name, float(min_withdrawal), float(withdrawal), float(deposit), float(maker), float(taker)])
+        records_coin.append([symbol, exchange_name.lower(), name.lower(), float(min_withdrawal), float(withdrawal), float(deposit), float(maker), float(taker)])
     return records_coin
 
 def insert_in_db(records, conn, cur):
@@ -80,6 +82,9 @@ def main():
         records_coin = get_record_coin(url_info, driver)
         if(records_coin is -1):
             break
+        if(records_coin is -2):
+            id_crypto = id_crypto + 1
+            continue
         insert_in_db(records_coin, conn, cur)
         id_crypto = id_crypto + 1
     driver.quit()
