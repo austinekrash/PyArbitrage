@@ -33,7 +33,7 @@ for view in intersectionView:
             #inserisco in perc la coppia o tripla symbol std_symbol percentuale
             #non ha senso prendere anche il prezzo, perchè il prezzo va preso subito prima della vednita/Acquisto
 
-
+"""
 def percentage(crypto1, crypto2):
     price1# = price della tupla che gli viene passata
     price2# = price della tupla che gli viene passata
@@ -42,3 +42,4 @@ def percentage(crypto1, crypto2):
     else:
         perc = (price2 - price1) / price1 * 100
     #return tupla con percentuale, exchange di partenza, exchange di destinazione
+"""
