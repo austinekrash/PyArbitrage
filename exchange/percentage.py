@@ -1,11 +1,11 @@
 import psycopg2
 import requests
 import json
-import exchange.binance
-import exchange.bitfinex
-import exchange.bittrex
-import exchange,cex
-import exchange.poloniex
+import binance
+import bitfinex
+import bittrex
+import cex
+import poloniex
 
 intersectionView = []
 perc = []
