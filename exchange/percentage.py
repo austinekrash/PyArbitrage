@@ -13,6 +13,7 @@ def percentage(cryptoIntersection):
     symbol1 = cryptoIntersection[0]
     symbol2 = cryptoIntersection[1]
     baseAsset = cryptoIntersection[2]
+    print(exchange1 + " " + symbol1 + " ")
     price1 = eval(exchange1).Factory().sync().get_price_pairs(symbol1)
     price2 = eval(exchange2).Factory().sync().get_price_pairs(symbol2)
     if(price1 >= price2):
