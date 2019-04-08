@@ -14,7 +14,7 @@ def percentage(cryptoIntersection):
     symbol2 = cryptoIntersection[1]
     baseAsset = cryptoIntersection[2]
     print(exchange1 + " " + symbol1 + " ")
-    classe = eval(exchange1)
+    classe = eval(exchange1)()
     classe.Factory()
     classe.sync()
     price1 = classe.get_price_pairs(symbol1)
