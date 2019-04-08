@@ -71,12 +71,12 @@ def close_db(conn, cur):
 
 
 def main():
-    id_crypto = 1
+    id_crypto = 73
     options = Options()  #Needed since no display
     options.headless = True
     conn, cur = connect_db()
-    driver = webdriver.Firefox(options=options)
     while True:
+        driver = webdriver.Firefox(options=options)
         print(id_crypto)
         url_info = 'https://www.feexplorer.io/coin/'+str(id_crypto)+'/'
         records_coin = get_record_coin(url_info, driver)
@@ -87,7 +87,7 @@ def main():
             continue
         insert_in_db(records_coin, conn, cur)
         id_crypto = id_crypto + 1
-    driver.quit()
+        driver.quit()
     close_db(conn, cur)
     #Exchange, Min-with, with, (espresso in coin corrente) deposit, maker, taker (ultimi due in percentuale)
 
