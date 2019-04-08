@@ -27,4 +27,4 @@ class Cex:
             raise Exception('Some problems retrieving price: '+r.status_code)
         res = json.loads(r.content)
         print("[CEX] "+res.get("lprice")+" "+res.get("curr1")+" "+res.get("curr2"))
-        res res.get("lprice")
+        return float(res.get("lprice"))

@@ -32,4 +32,4 @@ class Poloniex:
                 price = value['last']
                 break
         print("[POLONIEX] "+price+" "+symbol)
-        return price
+        return float(price)

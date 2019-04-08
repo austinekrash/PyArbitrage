@@ -27,4 +27,4 @@ class Binance:
             raise Exception('Some problems retrieving price: '+r.status_code)
         res = json.loads(r.content)
         print("[BINANCE] "+res.get("price")+" "+res.get("symbol"))
-        return res.get("price")
+        return float(res.get("price"))

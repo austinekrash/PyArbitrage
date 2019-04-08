@@ -27,4 +27,4 @@ class Bittrex:
             raise Exception('Some problems retrieving price: '+r.status_code)
         res = json.loads(r.content).get("result")
         print("[BITTREX] "+pair_symbol+" "+str(res.get("Last")))
-        return res.get("Last")
+        return float(res.get("Last"))

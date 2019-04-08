@@ -27,5 +27,5 @@ class Bitfinex:
             raise Exception('Some problems retrieving price: '+r.status_code)
         res = json.loads(r.content)
         print("[BITFINEX] "+pair_symbol+" "+str(res[6]))
-        return res[6]
+        return float(res[6])
         
