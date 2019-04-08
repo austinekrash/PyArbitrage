@@ -6,6 +6,8 @@ class Binance:
 
     __instance = None
     _table = 'binance'
+    _json = None
+    _url = 'https://binance.com/api/v3/ticker/price'
 
 
     @staticmethod
@@ -19,12 +21,21 @@ class Binance:
             raise Exception("This class is a singleton.")
         else:
             Binance.__instance = self
-
-    def get_price_pairs(self, pair_symbol):
+    
+    def sync(self):
         try:
-            r = requests.get('https://binance.com/api/v3/ticker/price?symbol='+pair_symbol)
+            r = requests.get(self._url)
+            self._json = r.content
         except (r.status_code != 200):
             raise Exception('Some problems retrieving price: '+r.status_code)
-        res = json.loads(r.content)
-        print("[BINANCE] "+res.get("price")+" "+res.get("symbol"))
-        return float(res.get("price"))
+
+
+    def get_price_pairs(self, pair_symbol):
+        for i in self._json:
+            if i['symbol'].lower() == pair_symbol.lower():
+                print("[BINANCE] "+i['price']+" "+i['symbol'])
+                return float(i['price'])
+        print("---------------------------------VALUE NOT FOUND---------------------------------")
+        return float(-1)
+
+        

@@ -6,6 +6,8 @@ class Bittrex:
 
     __instance = None
     _table = 'bittrex'
+    _json = None
+    _url = 'https://api.bittrex.com/api/v1.1/public/getmarketsummaries'
 
 
     @staticmethod
@@ -20,11 +22,17 @@ class Bittrex:
         else:
             Bittrex.__instance = self
 
-    def get_price_pairs(self, pair_symbol):
+    def sync(self):
         try:
-            r = requests.get('https://api.bittrex.com/api/v1.1/public/getticker?market='+pair_symbol)
+            r = requests.get(self._url)
+            self._json = r.content
         except (r.status_code != 200):
             raise Exception('Some problems retrieving price: '+r.status_code)
-        res = json.loads(r.content).get("result")
-        print("[BITTREX] "+pair_symbol+" "+str(res.get("Last")))
-        return float(res.get("Last"))
+
+    def get_price_pairs(self, pair_symbol):
+        for index in range(len(self._json)):
+            if pair_symbol.lower() in self._json[index]['MarketName'].lower():
+                print("[BITTREX] "+self._json[index]['MarketName']+" "+self._json[index]['Last'])
+                return float(self._json[index]['Last'])
+        print("---------------------------------VALUE NOT FOUND---------------------------------")
+        return -1
