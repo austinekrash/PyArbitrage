@@ -34,7 +34,7 @@ except:
 
 cur = conn.cursor()
 
-cur.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'VIEW'")
+cur.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'VIEW' AND table_name = 'intersection_cex_poloniex'")
 records = cur.fetchall()
 
 for x in records:
@@ -48,7 +48,9 @@ for view in intersectionView:
     for x in cur.fetchall():#prendo tutte le tuple per ogni view
         cryptoIntersection.append(x)
         for i in cryptoIntersection:
+
             perc.append(percentage(i))
+            print(percentage(i))
             #chiamo api prezzo su symbol
             #inserisco in perc la coppia o tripla symbol std_symbol percentuale
             #non ha senso prendere anche il prezzo, perchè il prezzo va preso subito prima della vednita/Acquisto
