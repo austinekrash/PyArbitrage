@@ -1,7 +1,7 @@
 import psycopg2
 import requests
 import json
-from sup import find_asset
+from sup import find_asset_bittrex
 
 try:
     conn = psycopg2.connect("dbname='arbitraggio' user='ale' host='localhost' password='pippo'")
@@ -10,20 +10,27 @@ except:
 
 cur = conn.cursor()
 
-r = requests.get("https://bittrex.com/api/v1.1/public/getmarketsummaries")
+r = requests.get("https://api.bittrex.com/api/v1.1/public/getmarkets")
 datastore = json.loads(r.content)
-symbols = datastore.get('result')
+pairs = datastore.get('result')
 list_of_records = []
 
 
-sql = """INSERT INTO bittrex(symbol, quote_asset, base_asset, symbol_std) VALUES(%s, %s, %s, %s) ON CONFLICT (symbol) DO NOTHING;"""
-
-for index in range(len(symbols)):
-    asset = find_asset(symbols[index]['MarketName'])
-    record = [symbols[index]['MarketName'], asset[0].lower(), asset[1].lower(), asset[0].lower() + asset[1].lower()]
+for index in range(len(pairs)):
+    baseAsset = pairs[index].get('MarketCurrency')
+    quoteAsset = pairs[index].get('BaseCurrency')
+    assets = [baseAsset, quoteAsset]
+    assets.sort()
+    record = [pairs[index].get('MarketName'), baseAsset.upper(), quoteAsset.upper(), assets[0].lower()+assets[1].lower(), 'Bittrex']
     list_of_records.append(record)
 
+sql = """INSERT INTO Bittrex(symbol, base_asset, quote_asset, symbol_std, exchange_name) VALUES(%s, %s, %s, %s, %s) ON CONFLICT (symbol) DO NOTHING;"""
 cur.executemany(sql, list_of_records)
 conn.commit()
 count = cur.rowcount
-print (count, "Record inserted successfully into bittrex table")
+print (count, "Record inserted successfully into BITTREX table")
+if(count != len(pairs)):
+    print("#n of items inserted differs from those received: "+count+" - "+len(pairs))
+cur.close()
+conn.close()
+
