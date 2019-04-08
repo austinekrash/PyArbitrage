@@ -14,7 +14,10 @@ def percentage(cryptoIntersection):
     symbol2 = cryptoIntersection[1]
     baseAsset = cryptoIntersection[2]
     print(exchange1 + " " + symbol1 + " ")
-    price1 = eval(exchange1).Factory().sync().get_price_pairs(symbol1)
+    classe = eval(exchange1)
+    classe.Factory()
+    classe.sync()
+    price1 = classe.get_price_pairs(symbol1)
     price2 = eval(exchange2).Factory().sync().get_price_pairs(symbol2)
     if(price1 >= price2):
         perc = (price1 - price2) / price2 * 100
