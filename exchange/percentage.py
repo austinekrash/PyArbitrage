@@ -34,7 +34,7 @@ except:
 
 cur = conn.cursor()
 
-cur.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'VIEW'")
+cur.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'VIEW' AND table_name = 'intersection_binance_poloniex'")
 records = cur.fetchall()
 
 for x in records:
