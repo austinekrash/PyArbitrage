@@ -5,10 +5,9 @@ from bittrex import Bittrex
 from poloniex import Poloniex
 
 cex = Cex.Factory()
-cex.get_records() #Works
-cex.get_price_pairs(0)
-cex.close()
-
+cex.sync()
+cex.get_price_pairs('ETH/BTC')
+'''
 binance = Binance.Factory()
 binance.get_price_pairs(0)
 
@@ -20,4 +19,4 @@ bittrex.get_price_pairs(0)
 
 poloniex = Poloniex.Factory()
 poloniex.get_price_pairs(0)
-
+'''
