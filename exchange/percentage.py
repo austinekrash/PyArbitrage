@@ -49,6 +49,7 @@ for view in intersectionView:
         cryptoIntersection.append(x)
         for i in cryptoIntersection:
             perc.append(percentage(i))
+            print(percentage(i))
             #chiamo api prezzo su symbol
             #inserisco in perc la coppia o tripla symbol std_symbol percentuale
             #non ha senso prendere anche il prezzo, perchè il prezzo va preso subito prima della vednita/Acquisto
