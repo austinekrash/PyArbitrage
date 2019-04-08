@@ -6,6 +6,8 @@ class Cex:
 
     __instance = None
     _table = 'cex'
+    _json = None
+    _url = 'https://api-pub.bitfinex.com/v2/tickers?symbols=ALL'
 
 
     @staticmethod
