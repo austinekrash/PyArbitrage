@@ -1,6 +1,7 @@
 import requests
 import json
 import psycopg2
+import os
 
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
@@ -71,7 +72,7 @@ def close_db(conn, cur):
 
 
 def main():
-    id_crypto = 73
+    id_crypto = 174
     options = Options()  #Needed since no display
     options.headless = True
     conn, cur = connect_db()
@@ -88,6 +89,7 @@ def main():
         insert_in_db(records_coin, conn, cur)
         id_crypto = id_crypto + 1
         driver.quit()
+        os.system('pkill firefox')
     close_db(conn, cur)
     #Exchange, Min-with, with, (espresso in coin corrente) deposit, maker, taker (ultimi due in percentuale)
 
