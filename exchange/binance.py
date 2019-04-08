@@ -25,6 +25,7 @@ class Binance:
     def sync(self):
         try:
             r = requests.get(self._url)
+            print('dovrei assegnarlo...............................--')
             self._json = r.content
         except (r.status_code != 200):
             raise Exception('Some problems retrieving price: '+r.status_code)
