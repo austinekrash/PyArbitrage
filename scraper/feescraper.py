@@ -1,6 +1,10 @@
 import requests
 import json
 import psycopg2
+<<<<<<< HEAD
+=======
+import os
+>>>>>>> fbd04e7081ce21e69c62a028a12cd6ac3695ae94
 
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
@@ -49,7 +53,11 @@ def get_record_coin(url_info, driver):
             taker = cols[3].text.split('/')[1]
         else:
             maker = taker = cols[3].text
+<<<<<<< HEAD
         records_coin.append([symbol, exchange_name, name, float(min_withdrawal), float(withdrawal), float(deposit), float(maker), float(taker)])
+=======
+        records_coin.append([symbol, exchange_name.lower(), name.lower(), float(min_withdrawal), float(withdrawal), float(deposit), float(maker), float(taker)])
+>>>>>>> fbd04e7081ce21e69c62a028a12cd6ac3695ae94
     return records_coin
 
 def insert_in_db(records, conn, cur):
@@ -71,12 +79,21 @@ def close_db(conn, cur):
 
 
 def main():
+<<<<<<< HEAD
     id_crypto = 249
     options = Options()  #Needed since no display
     options.headless = True
     conn, cur = connect_db()
     driver = webdriver.Firefox(options=options)
     while True:
+=======
+    id_crypto = 174
+    options = Options()  #Needed since no display
+    options.headless = True
+    conn, cur = connect_db()
+    while True:
+        driver = webdriver.Firefox(options=options)
+>>>>>>> fbd04e7081ce21e69c62a028a12cd6ac3695ae94
         print(id_crypto)
         url_info = 'https://www.feexplorer.io/coin/'+str(id_crypto)+'/'
         records_coin = get_record_coin(url_info, driver)
@@ -87,7 +104,12 @@ def main():
             continue
         insert_in_db(records_coin, conn, cur)
         id_crypto = id_crypto + 1
+<<<<<<< HEAD
     driver.quit()
+=======
+        driver.quit()
+        os.system('pkill firefox')
+>>>>>>> fbd04e7081ce21e69c62a028a12cd6ac3695ae94
     close_db(conn, cur)
     #Exchange, Min-with, with, (espresso in coin corrente) deposit, maker, taker (ultimi due in percentuale)
 
