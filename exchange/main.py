@@ -7,16 +7,20 @@ from poloniex import Poloniex
 cex = Cex.Factory()
 cex.sync()
 cex.get_price_pairs('ETH/BTC')
-'''
+
 binance = Binance.Factory()
-binance.get_price_pairs(0)
+binance.sync()
+binance.get_price_pairs('ETHBTC')
 
 bitfinex = Bitfinex.Factory()
-bitfinex.get_price_pairs(2)
+bitfinex.sync()
+bitfinex.get_price_pairs('ETHBTC')
+
 
 bittrex = Bittrex.Factory()
-bittrex.get_price_pairs(0)
+bittrex.sync()
+bittrex.get_price_pairs('BTC-GRIN')
 
 poloniex = Poloniex.Factory()
-poloniex.get_price_pairs(0)
-'''
+poloniex.sync()
+poloniex.get_price_pairs('BTC_BCN')

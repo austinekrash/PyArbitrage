@@ -24,16 +24,17 @@ class Poloniex:
     def sync(self):
         try:
             r = requests.get(self._url)
-            self._json = r.content
+            self._json = json.loads(r.content)
         except (r.status_code != 200):
             raise Exception('Some problems retrieving price: '+r.status_code)  
 
     def get_price_pairs(self, pair_symbol):
-
         for key, value in self._json.items():
-            if(pair_symbol == key):
+            if(pair_symbol.lower() == key.lower()):
                 symbol = key
                 price = value['last']
-                break
-        print("[POLONIEX] "+price+" "+symbol)
-        return float(price)
+                print("[POLONIEX] "+price+" "+symbol)
+                return float(price)
+        print("---------------------------------VALUE NOT FOUND---------------------------------")
+        return -1
+        
