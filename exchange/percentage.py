@@ -13,12 +13,8 @@ def percentage(cryptoIntersection):
     symbol1 = cryptoIntersection[0]
     symbol2 = cryptoIntersection[1]
     baseAsset = cryptoIntersection[2]
-    print(exchange1 + " " + symbol1 + " ")
-    classe = eval(exchange1)()
-    classe.Factory()
-    classe.sync()
-    price1 = classe.get_price_pairs(symbol1)
-    price2 = eval(exchange2).Factory().sync().get_price_pairs(symbol2)
+    price1 = eval(exchange1)().Factory().sync().get_price_pairs(symbol1)
+    price2 = eval(exchange2)().Factory().sync().get_price_pairs(symbol2)
     if(price1 >= price2):
         perc = (price1 - price2) / price2 * 100
         return {"percentage": perc ,"startExchange": exchange2, "startSymbol": symbol2, "startPrice": price2, "endExchange": exchange1, "endSymbol": symbol1, "endPrice": price1}
@@ -38,7 +34,7 @@ except:
 
 cur = conn.cursor()
 
-cur.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'VIEW' AND table_name = 'intersection_bittrex_poloniex'")
+cur.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'VIEW' AND table_name = 'intersection_binance_poloniex'")
 records = cur.fetchall()
 
 for x in records:
@@ -52,11 +48,9 @@ for view in intersectionView:
     for x in cur.fetchall():#prendo tutte le tuple per ogni view
         cryptoIntersection.append(x)
         for i in cryptoIntersection:
-            #print(i)
             
             perc.append(percentage(i))
             print(percentage(i))
-            
             #chiamo api prezzo su symbol
             #inserisco in perc la coppia o tripla symbol std_symbol percentuale
             #non ha senso prendere anche il prezzo, perchè il prezzo va preso subito prima della vednita/Acquisto
