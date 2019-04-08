@@ -64,6 +64,14 @@ for view in intersectionView:
             #inserisco in perc la coppia o tripla symbol std_symbol percentuale
             #non ha senso prendere anche il prezzo, perchè il prezzo va preso subito prima della vednita/Acquisto
 orderedList = sorted(perc, key=lambda k: k['percentage']) 
-orderedSet = set(orderedList)
-for i in orderedSet:
+
+seen = set()
+new_l = []
+for d in orderedList:
+    t = tuple(d.items())
+    if t not in seen:
+        seen.add(t)
+        new_l.append(d)
+
+for i in new_l:
     print(i)
