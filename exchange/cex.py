@@ -50,7 +50,7 @@ class Cex:
     def get_price_pairs(self, pair_symbol):
         for index in range(len(self._json)):
             if pair_symbol.lower() in self._json[index]['pair'].lower() :
-                print("[CEX.IO] "+pair_symbol+" "+str(self._json[index]['lprice']))
+                #print("[CEX.IO] "+pair_symbol+" "+str(self._json[index]['lprice']))
                 return self._json[index]['lprice']
         print("---------------------------------VALUE NOT FOUND---------------------------------")
         return -1

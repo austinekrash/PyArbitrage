@@ -31,7 +31,7 @@ class Bitfinex:
     def get_price_pairs(self, pair_symbol):
         for index in range(len(self._json)):
             if pair_symbol.lower() in self._json[index][0].lower():
-                print("[BITFINEX] "+pair_symbol+" "+str(self._json[index][7]))
+                #print("[BITFINEX] "+pair_symbol+" "+str(self._json[index][7]))
                 return float(self._json[index][7])
         print("---------------------------------VALUE NOT FOUND---------------------------------")
         return -1

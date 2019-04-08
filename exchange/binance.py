@@ -33,7 +33,7 @@ class Binance:
     def get_price_pairs(self, pair_symbol):
         for index in range(len(self._json)):
             if self._json[index]['symbol'].lower() == pair_symbol.lower():
-                print("[BINANCE] "+self._json[index]['price']+" "+self._json[index]['symbol'])
+                #print("[BINANCE] "+self._json[index]['price']+" "+self._json[index]['symbol'])
                 return float(self._json[index]['price'])
         print("---------------------------------VALUE NOT FOUND---------------------------------")
         return float(-1)
