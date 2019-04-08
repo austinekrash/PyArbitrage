@@ -6,7 +6,8 @@ class Bitfinex:
 
     __instance = None
     _table = 'bitfinex'
-
+    _json = None
+    _url = 'https://api-pub.bitfinex.com/v2/tickers?symbols=ALL'
 
     @staticmethod
     def Factory():
@@ -19,13 +20,19 @@ class Bitfinex:
             raise Exception("This class is a singleton.")
         else:
             Bitfinex.__instance = self
-        
-    def get_price_pairs(self, pair_symbol):
+    
+    def sync(self):
         try:
-            r = requests.get('https://api-pub.bitfinex.com/v2/ticker/'+pair_symbol)
+            r = requests.get(self._url)
+            self._json = r.content
         except (r.status_code != 200):
             raise Exception('Some problems retrieving price: '+r.status_code)
-        res = json.loads(r.content)
-        print("[BITFINEX] "+pair_symbol+" "+str(res[6]))
-        return float(res[6])
+
+    def get_price_pairs(self, pair_symbol):
+        for(index in range(len(self._json))):
+            if(pair_symbol.lower() in self._json[index][0].lower()):
+                print("[BITFINEX] "+pair_symbol+" "+str(self._json[index][7))
+                return float(self._json[index][7])
+        print("---------------------------------VALUE NOT FOUND---------------------------------")
+        return -1
         
