@@ -25,15 +25,14 @@ class Bittrex:
     def sync(self):
         try:
             r = requests.get(self._url)
-            self._json = r.content
+            self._json = json.loads(r.content).get('result')
         except (r.status_code != 200):
             raise Exception('Some problems retrieving price: '+r.status_code)
 
     def get_price_pairs(self, pair_symbol):
         for index in range(len(self._json)):
-            print(self._json[index])
-            if pair_symbol.lower() in self._json(index)['MarketName'].lower():
-                print("[BITTREX] "+self._json[index]['MarketName']+" "+self._json[index]['Last'])
+            if pair_symbol.lower() in self._json[index]['MarketName'].lower():
+                print("[BITTREX] "+self._json[index]['MarketName']+" "+str(self._json[index]['Last']))
                 return float(self._json[index]['Last'])
         print("---------------------------------VALUE NOT FOUND---------------------------------")
         return -1
