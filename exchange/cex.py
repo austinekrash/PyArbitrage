@@ -31,6 +31,9 @@ class Cex:
                     crypto = crypto_data[index]['pair'].split(':')[0]
                     crypto_list.append(crypto)
                 crypto_list.append('USD')
+                crypto_list.append('GBP')
+                crypto_list.append('EUR')
+                crypto_list.append('RUB')
                 for index in range(len(crypto_list)):
                     r = requests.get(self._url_prices+crypto_list[index])
                     last_prices_market = json.loads(r.content).get('data')
