@@ -6,7 +6,8 @@ class Poloniex:
 
     __instance = None
     _table = 'poloniex'
-
+    _json = None
+    _url = 'https://poloniex.com/public?command=returnTicker'
 
     @staticmethod
     def Factory():
@@ -18,15 +19,18 @@ class Poloniex:
         if Poloniex.__instance != None:
             raise Exception("This class is a singleton.")
         else:
-            Poloniex.__instance = self            
+            Poloniex.__instance = self       
+
+    def sync(self):
+        try:
+            r = requests.get(self._url)
+            self._json = r.content
+        except (r.status_code != 200):
+            raise Exception('Some problems retrieving price: '+r.status_code)  
 
     def get_price_pairs(self, pair_symbol):
-        try:
-            r = requests.get('https://poloniex.com/public?command=returnTicker')
-        except (r.status_code != 200):
-            raise Exception('Some problems retrieving price: '+r.status_code)
-        res = json.loads(r.content)
-        for key, value in res.items():
+
+        for key, value in self._json.items():
             if(pair_symbol == key):
                 symbol = key
                 price = value['last']
