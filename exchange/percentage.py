@@ -7,6 +7,23 @@ import bittrex
 import cex
 import poloniex
 
+def percentage(cryptoIntersection):
+    exchange1 = cryptoIntersection[3]
+    exchange2 = cryptoIntersection[4]
+    symbol1 = cryptoIntersection[0]
+    symbol2 = cryptoIntersection[1]
+    baseAsset = cryptoIntersection[2]
+    price1 = cryptoIntersection[3]().get_price_pairs(cryptoIntersection[0])
+    price2 = cryptoIntersection[4]().get_price_pairs(cryptoIntersection[1])
+    if(price1 >= price2):
+        perc = (price1 - price2) / price2 * 100
+        return {"percentage": perc ,"startExchange": exchange2, "startSymbol": symbol2, "startPrice": price2, "endExchange": exchange1, "endSymbol": symbol1, "endPrice": price1}
+    else:
+        perc = (price2 - price1) / price1 * 100
+        return {"percentage": perc ,"startExchange": exchange1, "startSymbol": symbol1, "startPrice": price1, "endExchange": exchange2, "endSymbol": symbol2, "endPrice": price2}
+    #return tupla con percentuale, exchange di partenza, exchange di destinazione
+
+
 intersectionView = []
 perc = []
 
@@ -35,20 +52,3 @@ for view in intersectionView:
             #chiamo api prezzo su symbol
             #inserisco in perc la coppia o tripla symbol std_symbol percentuale
             #non ha senso prendere anche il prezzo, perchè il prezzo va preso subito prima della vednita/Acquisto
-
-
-def percentage(cryptoIntersection):
-    exchange1 = cryptoIntersection[3]
-    exchange2 = cryptoIntersection[4]
-    symbol1 = cryptoIntersection[0]
-    symbol2 = cryptoIntersection[1]
-    baseAsset = cryptoIntersection[2]
-    price1 = cryptoIntersection[3]().get_price_pairs(cryptoIntersection[0])
-    price2 = cryptoIntersection[4]().get_price_pairs(cryptoIntersection[1])
-    if(price1 >= price2):
-        perc = (price1 - price2) / price2 * 100
-        return {"percentage": perc ,"startExchange": exchange2, "startSymbol": symbol2, "startPrice": price2, "endExchange": exchange1, "endSymbol": symbol1, "endPrice": price1}
-    else:
-        perc = (price2 - price1) / price1 * 100
-        return {"percentage": perc ,"startExchange": exchange1, "startSymbol": symbol1, "startPrice": price1, "endExchange": exchange2, "endSymbol": symbol2, "endPrice": price2}
-    #return tupla con percentuale, exchange di partenza, exchange di destinazione
