@@ -13,8 +13,8 @@ def percentage(cryptoIntersection):
     symbol1 = cryptoIntersection[0]
     symbol2 = cryptoIntersection[1]
     baseAsset = cryptoIntersection[2]
-    price1 = eval(exchange1).Factory().sync()#.get_price_pairs(symbol1)
-    price2 = eval(exchange2).Factory().sync()#.get_price_pairs(symbol2)
+    price1 = eval(exchange1).Factory().sync().get_price_pairs(symbol1)
+    price2 = eval(exchange2).Factory().sync().get_price_pairs(symbol2)
     if(price1 >= price2):
         perc = (price1 - price2) / price2 * 100
         return {"percentage": perc ,"startExchange": exchange2, "startSymbol": symbol2, "startPrice": price2, "endExchange": exchange1, "endSymbol": symbol1, "endPrice": price1}
@@ -43,11 +43,14 @@ for x in records:
 #per ogni exchange prendo la lista delle crypto
 for view in intersectionView:
     cur.execute("SELECT * FROM "+view)
+    print(view)
     cryptoIntersection = []
     symbol = []
     for x in cur.fetchall():#prendo tutte le tuple per ogni view
+        print(x)
         cryptoIntersection.append(x)
         for i in cryptoIntersection:
+            print(i)
             
             perc.append(percentage(i))
             print(percentage(i))
