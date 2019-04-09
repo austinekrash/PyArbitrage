@@ -13,7 +13,7 @@ class Bitfinex:
     _url = 'https://api-pub.bitfinex.com/v2/tickers?symbols=ALL'
     BASE_URL = "https://api.bitfinex.com"
     KEY="RKv5MNSRaHCzaxF6OmYh7eIC3qc0v657izJ8EjzEHVd"
-    SECRET="xaXTd9er3aEelDpoBm9aS4YVeFNckmj2YgV6jVdiDod"
+    SECRET= b"xaXTd9er3aEelDpoBm9aS4YVeFNckmj2YgV6jVdiDod"
 
     @staticmethod
     def Factory():
@@ -52,7 +52,7 @@ class Bitfinex:
         nonce = self._nonce()
         body = {}
         payloadObject = {
-            'request':'v1/order/new',
+            'request':'/v1/deposit/new',
             'nonce':str(int(time.time()*1000000)), #convert to string
             'options':{
                 'method':'bitcoin',
