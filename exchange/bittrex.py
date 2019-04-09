@@ -42,7 +42,7 @@ class Bittrex:
     def getDepositAddress(self, symbol):
         self._url = self._url + '/account/getdepositaddress?apikey=' + self._apiKey + '&currency=' + symbol
         try:
-            r = requests.get(self._url)
+            r = requests.get(self._url).json()
             self._json = json.loads(r.content).get('result')
             for index in range(len(self._json)):
                 print(self._json[index])
