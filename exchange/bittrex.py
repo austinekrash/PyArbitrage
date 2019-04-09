@@ -42,9 +42,10 @@ class Bittrex:
     def getDepositAddress(self, symbol):
         self._url = self._url + '/account/getdepositaddress?apikey=' + self._apiKey + '&currency=' + symbol
         try:
-            r = requests.get(self._url).json()
-            self._json = json.loads(r.content).get('result')
-            for index in range(len(self._json)):
-                print(self._json[index])
+            r = requests.get(self._url)
+            print(r.content)
+            #self._json = json.loads(r.content).get('result')
+            #for index in range(len(self._json)):
+                #print(self._json[index])
         except (r.status_code != 200):
             raise Exception('Some problems retrieving price: '+r.status_code)
