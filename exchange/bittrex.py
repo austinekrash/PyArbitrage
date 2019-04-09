@@ -44,6 +44,7 @@ class Bittrex:
         try:
             r = requests.get(self._url)
             self._json = json.loads(r.content).get('result')
-            print(self._json)
+            for index in range(len(self._json)):
+                print(self._json[index])
         except (r.status_code != 200):
             raise Exception('Some problems retrieving price: '+r.status_code)
