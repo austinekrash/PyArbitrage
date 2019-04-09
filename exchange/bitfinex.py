@@ -48,7 +48,7 @@ class Bitfinex:
             "content-type": "application/json"
         }
 
-    def get_address(self, symbol):
+    def get_address(self, cryptoName):
         nonce = self._nonce()
         body = {}
         rawBody = json.dumps(body)
@@ -59,7 +59,7 @@ class Bitfinex:
         print(nonce)
 
 
-        headers = self._headers(path, nonce, rawBody)
+        headers = self._headers(path, nonce, 'bitcoin', 'exchange', 1, rawBody)
 
         print(headers)
         print(rawBody)
