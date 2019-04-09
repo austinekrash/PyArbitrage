@@ -17,11 +17,14 @@ bitfinex = Bitfinex.Factory()
 bitfinex.sync()
 bitfinex.get_price_pairs('ETHBTC')
 '''
-
+"""
 bittrex = Bittrex.Factory()
 bittrex.sync()
 bittrex.get_price_pairs('BTC-GRIN')
 bittrex.getDepositAddress('test')
+"""
+bitfinex = Bitfinex().Factory()
+bitfinex.get_address('BTC')
 
 
 '''

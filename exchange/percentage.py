@@ -1,9 +1,6 @@
 import psycopg2
 import requests
 import json
-import hashlib
-import hmac
-import time #for nonce
 from binance import Binance
 from bitfinex import Bitfinex
 from bittrex import Bittrex
