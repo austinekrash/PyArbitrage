@@ -1,5 +1,8 @@
 import requests
 import json
+import hashlib
+import hmac
+import time #for nonce
 
 
 class Bitfinex:
