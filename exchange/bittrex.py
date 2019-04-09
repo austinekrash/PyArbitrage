@@ -7,8 +7,9 @@ class Bittrex:
     __instance = None
     _table = 'bittrex'
     _json = None
-    _url = 'https://api.bittrex.com/api/v1.1/public/getmarketsummaries'
-
+    _url = 'https://api.bittrex.com/api/v1.1'
+    _apiKey = 'd94bf4036b9841729f2d5100ee9132a4'
+    _secretKey = '672e4f9fea3b4628b1bf5617fbdb22be'#non so se serve la secret key
 
     @staticmethod
     def Factory():
@@ -23,6 +24,7 @@ class Bittrex:
             Bittrex.__instance = self
 
     def sync(self):
+        self._url = self._url + '/public/getmarketsummaries'
         try:
             r = requests.get(self._url)
             self._json = json.loads(r.content).get('result')
@@ -36,3 +38,12 @@ class Bittrex:
                 return float(self._json[index]['Last'])
         print("---------------------------------VALUE NOT FOUND---------------------------------")
         return -1
+
+    def getDepositAddress(self, symbol):
+        self._url = self._url + '/account/getdepositaddress?apikey=' + self._apiKey + '&currency=' + symbol
+        try:
+            r = requests.get(self._url)
+            self._json = json.loads(r.content).get('result')
+            print(self._json)
+        except (r.status_code != 200):
+            raise Exception('Some problems retrieving price: '+r.status_code)

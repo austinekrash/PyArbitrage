@@ -8,7 +8,8 @@ class Binance:
     _table = 'binance'
     _json = None
     _url = 'https://binance.com/api/v3/ticker/price'
-
+    _apiKey = 'WXYox2eh9V8fUiLvjdW9f8xkh3q30EpzxGaeLQvxMZ0TTUyDSaIJliEmAXr2NtYN'
+    _secretKey = 'qbXdJU82w1QKpjHe6OFRMdJMxbZgQuHigLRzssDqf3TCpEaxyAaHyrGolDQzbrbD'#non so se serve la secret key
 
     @staticmethod
     def Factory():

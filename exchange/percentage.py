@@ -75,3 +75,5 @@ for d in orderedList:
 
 for i in new_l:
     print(i)
+
+print(Bittrex.getDepositAddress('BTC'))
