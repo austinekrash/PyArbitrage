@@ -11,7 +11,7 @@ class Bitfinex:
     _table = 'bitfinex'
     _json = None
     _url = 'https://api-pub.bitfinex.com/v2/tickers?symbols=ALL'
-    BASE_URL = "https://api.bitfinex.com/"
+    BASE_URL = "https://api.bitfinex.com"
     KEY="RKv5MNSRaHCzaxF6OmYh7eIC3qc0v657izJ8EjzEHVd"
     SECRET="xaXTd9er3aEelDpoBm9aS4YVeFNckmj2YgV6jVdiDod"
 
