@@ -50,8 +50,16 @@ class Bitfinex:
 
     def get_address(self, cryptoName):
         nonce = self._nonce()
-        body = {'method':'bitcoin', 'wallet_name':'exchange', 'renew':1}
-        rawBody = json.dumps(body)
+        body = {}
+        payloadObject = {
+            'request':'v1/order/new',
+            'nonce':str(int(time.time()*1000000)), #convert to string
+            'options':{
+                'method':'bitcoin',
+                'wallet_name':'exchange',
+                'renew':'1'}
+        }
+        rawBody = json.dumps(payloadObject)
         path = "/v1/deposit/new"
 
 
