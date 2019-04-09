@@ -50,7 +50,7 @@ class Bitfinex:
 
     def get_address(self, cryptoName):
         nonce = self._nonce()
-        body = {"method": "bitcoin", "wallet_name": "exchange", "renew": 1}
+        body = {'bitcoin', 'exchange', 1}
         rawBody = json.dumps(body)
         path = "/v1/deposit/new"
 
