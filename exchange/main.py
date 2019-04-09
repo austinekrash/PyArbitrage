@@ -21,8 +21,8 @@ bitfinex.get_price_pairs('ETHBTC')
 bittrex = Bittrex.Factory()
 bittrex.sync()
 bittrex.get_price_pairs('BTC-GRIN')
-bittrex.getDepositAddress('test')
-
+bittrex.get_deposit_address('BTC')
+bittrex.get_balances('BTC')
 
 '''
 poloniex = Poloniex.Factory()
