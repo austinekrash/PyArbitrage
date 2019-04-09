@@ -1,5 +1,8 @@
 import requests
 import json
+import time
+import hmac
+import hashlib
 
 
 class Bittrex:
@@ -9,7 +12,7 @@ class Bittrex:
     _json = None
     _url = 'https://api.bittrex.com/api/v1.1'
     _apiKey = 'd94bf4036b9841729f2d5100ee9132a4'
-    _secretKey = '672e4f9fea3b4628b1bf5617fbdb22be'#non so se serve la secret key
+    _secretKey = bytearray('672e4f9fea3b4628b1bf5617fbdb22be', "utf-8")#non so se serve la secret key
 
     @staticmethod
     def Factory():
@@ -40,12 +43,11 @@ class Bittrex:
         return -1
 
     def getDepositAddress(self, symbol):
-        self._url = self._url + '/account/getdepositaddress?apikey=' + self._apiKey + '&currency=' + symbol
+        auth = 'https://api.bittrex.com/api/v1.1/account/getdepositaddress?apikey='+self._apiKey+'&currency=BTC&nonce='+str(int(time.time()))
+        signature = hmac.new(self._secretKey, auth.encode('utf-8'), hashlib.sha512).hexdigest()
+        headers = {'apisign': signature}
         try:
-            r = requests.get(self._url)
+            r = requests.get(auth, headers=headers)
             print(r.content)
-            #self._json = json.loads(r.content).get('result')
-            #for index in range(len(self._json)):
-                #print(self._json[index])
         except (r.status_code != 200):
             raise Exception('Some problems retrieving price: '+r.status_code)

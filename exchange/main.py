@@ -4,6 +4,7 @@ from bitfinex import Bitfinex
 from bittrex import Bittrex
 from poloniex import Poloniex
 
+'''
 cex = Cex.Factory()
 cex.sync()
 cex.get_price_pairs('ETH/BTC')
@@ -15,12 +16,16 @@ binance.get_price_pairs('ETHBTC')
 bitfinex = Bitfinex.Factory()
 bitfinex.sync()
 bitfinex.get_price_pairs('ETHBTC')
-
+'''
 
 bittrex = Bittrex.Factory()
 bittrex.sync()
 bittrex.get_price_pairs('BTC-GRIN')
+bittrex.getDepositAddress('test')
 
+
+'''
 poloniex = Poloniex.Factory()
 poloniex.sync()
 poloniex.get_price_pairs('BTC_BCN')
+'''
