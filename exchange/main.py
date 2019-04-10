@@ -13,6 +13,10 @@ BITTREXapiKey = 'd94bf4036b9841729f2d5100ee9132a4'
 BITTREXsecretKey = '672e4f9fea3b4628b1bf5617fbdb22be'
 
 
+POLONIEXapiKey = '8QF9DS6A-YJWQQLWW-ZKUM8YV8-YJ5HG70E'
+pOLONIEXsecretKey = '6dd1afa15f71fe6c77bb0fd9348058f9d45deb99d0e9c5aed2752f974919f5b381db5f5e458c558e720805a1d840f56064253cce64a4c84fc0b05ad8f51d8ecc'
+
+
 '''
 p = Poloniex.Factory()
 print(p.return_fee_info())

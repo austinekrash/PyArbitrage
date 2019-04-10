@@ -15,21 +15,18 @@ class Poloniex():
     _baseUrl = 'https://poloniex.com/tradingApi'
     pol = None
 
-    _apiKey = '8QF9DS6A-YJWQQLWW-ZKUM8YV8-YJ5HG70E'
-    _secretKey = bytearray('6dd1afa15f71fe6c77bb0fd9348058f9d45deb99d0e9c5aed2752f974919f5b381db5f5e458c558e720805a1d840f56064253cce64a4c84fc0b05ad8f51d8ecc', "utf-8")#non so se serve la secret key
-
     @staticmethod
-    def Factory():
+    def Factory(apiKey, secreKey):
         if Poloniex.__instance == None:
-            Poloniex()
+            Poloniex(apiKey, secreKey)
         return Poloniex.__instance
 
-    def __init__(self):
+    def __init__(self, apiKey, secretKey):
         if Poloniex.__instance != None:
             raise Exception("This class is a singleton.")
         else:
             Poloniex.__instance = self
-            self.pol = polo('8QF9DS6A-YJWQQLWW-ZKUM8YV8-YJ5HG70E','6dd1afa15f71fe6c77bb0fd9348058f9d45deb99d0e9c5aed2752f974919f5b381db5f5e458c558e720805a1d840f56064253cce64a4c84fc0b05ad8f51d8ecc')
+            self.pol = polo(apiKey, secretKey)
 
     @staticmethod
     def get_nonce():

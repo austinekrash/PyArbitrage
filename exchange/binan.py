@@ -15,9 +15,9 @@ class Binance():
     _url = 'https://binance.com/api/v3/ticker/price'
 
     @staticmethod
-    def Factory(apiKey, secreKey):
+    def Factory(apiKey, secretKey):
         if Binance.__instance == None:
-            Binance(apiKey, secreKey)
+            Binance(apiKey, secretKey)
         return Binance.__instance
 
     def __init__(self, apiKey, secretKey):
