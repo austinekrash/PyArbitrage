@@ -1,3 +1,4 @@
+import psycopg2
 from cex import Cex
 from binan import Binance
 from bitfinex import Bitfinex
@@ -16,6 +17,36 @@ POLONIEXsecretKey = '6dd1afa15f71fe6c77bb0fd9348058f9d45deb99d0e9c5aed2752f97491
 
 BITFINEXapiKey = 'SxBHFSegUgIjDXCKCJSbGRPAxmGdgNCVFRStoVkLaaD'
 BITFINEXsecretKey = '7Ud65qmtjg1lFA4j1u8e5tu3CeU4bL2V4Ni79an6B0P'
+
+def is_advantages(startAmount, endAmount):
+    if startAmount >= endAmount:
+        return False
+    else:
+        return True
+
+
+def arbitrage_fee(startExchange, endExchange, symbolStart, symbolEnd, priceStart, priceEnd, startAmount):
+    #SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee  WHERE symbol = 'BTC' AND exchange = 'binance'
+    try:
+        conn = psycopg2.connect("dbname='arbitraggio' user='ale' host='51.15.122.155' password='pippo'")
+    except:
+        print("I am unable to connect to the database")
+    cur = conn.cursor()
+    cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee")
+    start = cur.fetchall()
+    #cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee  WHERE symbol = " + symbolEnd +  "AND exchange =" + endExchange)
+    #end = cur.fetchall()
+    print(start)
+    withdrawalFee = 0 #query
+    depositFee = 0 #query
+    taker = 0 #query
+    startWithdrawal = startAmount - withdrawalFee
+    endWithdrawal = startWithdrawal - depositFee
+    sellCurr = endWithdrawal - endWithdrawal * taker
+
+
+arbitrage_fee('bitfinex', 'binance', 'BTC', 'BTC', '1', '1', '10')
+
 
 
 bitfinex = Bitfinex.Factory(BITFINEXapiKey,BITFINEXsecretKey)
