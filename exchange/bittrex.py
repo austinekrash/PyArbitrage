@@ -13,6 +13,8 @@ class Bittrex:
     _url = 'https://api.bittrex.com/api/v1.1'
     _url_account = 'https://api.bittrex.com/api/v1.1/account/'
     _url_market = 'https://api.bittrex.com/api/v1.1/market/'
+    _apiKey = None
+    _secretKey = None
     
     @staticmethod
     def Factory(apiKey, secretKey):
@@ -27,6 +29,7 @@ class Bittrex:
             Bittrex.__instance = self
             _apiKey = apiKey
             _secretKey = bytearray(secretKey, "utf-8")
+
     @staticmethod
     def get_nonce():
         return str(int(time.time()))

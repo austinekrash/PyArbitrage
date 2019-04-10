@@ -116,10 +116,6 @@ class Binance():
         else:
             self.costum_print('Frozen')
             return -1
-
-    
-
-    
     
     
 '''    
