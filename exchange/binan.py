@@ -50,6 +50,9 @@ class Binance():
         sys.exit(1)
 
     def get_deposit_address(self, symbol):
+        if (self.__is_frozen(symbol) == -1):
+            self.costum_print('Frozen '+symbol)
+            return -1
         res = self._client.get_deposit_address(asset=symbol)
         if( res['success'] is True):
             self.costum_print(res)
@@ -102,7 +105,7 @@ class Binance():
         self.costum_print(res)
         return res
     
-    def is_frozen(self, symbol): #return depositStatus, withdrawStatus
+    def __is_frozen(self, symbol): #return depositStatus, withdrawStatus
         res = self._client.get_asset_details()
         if( res['success'] is True):
             for key,value in res['assetDetail'].items():
@@ -111,8 +114,8 @@ class Binance():
             self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
             sys.exit(1)
         else:
-            self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
-            sys.exit(1)
+            self.costum_print('Frozen')
+            return -1
 
     
 

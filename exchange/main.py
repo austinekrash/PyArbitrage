@@ -34,19 +34,32 @@ binance.get_deposit_address('PAX')
 binance.get_balance('XRP')
 binance.get_balances()
 print(binance.is_frozen('BTC'))
+<<<<<<< HEAD
+'''
+'''
+bitfinex = Bitfinex.Factory()
+bitfinex.sync()
+bitfinex.get_price_pairs('ETHBTC')
+'''
+=======
 
 
 bitfinex = Bitfinex.Factory()
 bitfinex.sync()
 bitfinex.get_price_pairs('ETHBTC')
+>>>>>>> 615940a931933b97e9cffd2edd01f193fb6c3867
 
 bittrex = Bittrex.Factory()
 bittrex.sync()
 #bittrex.get_price_pairs('BTC-GRIN')
-#bittrex.get_deposit_address('BTC')
-bittrex.get_balances()
+bittrex.get_deposit_address('BTC')
+#bittrex.get_balances()
 #bittrex.get_open_orders('BTC-GRIN')
+<<<<<<< HEAD
+'''
+=======
 
+>>>>>>> 615940a931933b97e9cffd2edd01f193fb6c3867
 bittrex = Bittrex.Factory()
 bittrex.sync()
 bittrex.get_price_pairs('BTC-GRIN')

@@ -60,13 +60,15 @@ class Bittrex:
         try:
             r = requests.get(auth, headers=headers)
             res = json.loads(r.content)
+            self.costum_print(res)
         except (r.status_code != 200):
             raise Exception('Some problems retrieving price: '+r.status_code)
         if( True is json.loads(r.content).get('success')):
             self.costum_print(res.get('result').get('Address'))
             return res.get('result').get('Address')
         else:
-            self.costum_print(' some problems')
+            if(res.get('messagge') == 'CURRENCY_OFFLINE'):
+                return -1
             sys.exit(1)
 
     #paymentid CryptoNotes/BitShareX/Nxt/XRP
