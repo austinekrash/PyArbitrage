@@ -71,7 +71,7 @@ class Binance():
         return res['free'], res['locked']
 
     def get_balances(self):
-        res self._client.get_account()
+        res = self._client.get_account()
         self.costum_print(res)
         return res
 

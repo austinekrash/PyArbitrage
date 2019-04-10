@@ -3,6 +3,8 @@ import json
 import hashlib
 import hmac
 import time #for nonce
+import base64
+
 
 
 class Bitfinex:
@@ -11,9 +13,9 @@ class Bitfinex:
     _table = 'bitfinex'
     _json = None
     _url = 'https://api-pub.bitfinex.com/v2/tickers?symbols=ALL'
-    BASE_URL = "https://api.bitfinex.com"
+    BASE_URL = "https://api.bitfinex.com/"
     KEY="RKv5MNSRaHCzaxF6OmYh7eIC3qc0v657izJ8EjzEHVd"
-    SECRET="xaXTd9er3aEelDpoBm9aS4YVeFNckmj2YgV6jVdiDod"
+    SECRET= bytearray("xaXTd9er3aEelDpoBm9aS4YVeFNckmj2YgV6jVdiDod", "utf-8")
 
     @staticmethod
     def Factory():
@@ -35,32 +37,30 @@ class Bitfinex:
         return str(int(round(time.time() * 1000)))
 
     def _headers(self, path, nonce, body):
-
-        signature = "/api/" + path + nonce + body
-        print(")Signing: " + signature)
-        h = hmac.new(self.SECRET.encode('utf8'), signature.encode('utf8'), hashlib.sha384)
+        
+        signature =  path + nonce + body
+        print("Signing: " + signature)
+        h = hmac.new(self.SECRET, signature.encode('utf8'), hashlib.sha384)
         signature = h.hexdigest()
 
         return {
-            "bfx-nonce": nonce,
-            "bfx-apikey": self.KEY,
-            "bfx-signature": signature,
-            "content-type": "application/json"
+            #"bfx-nonce": nonce,
+            #"bfx-apikey": self.KEY,
+            #"bfx-signature": signature,
+            #"content-type": "application/json"
+            'X-BFX-APIKEY': self.KEY,
+            'X-BFX-PAYLOAD': body,
+            'X-BFX-SIGNATURE': signature
         }
 
-    def get_address(self, cryptoName):
+    def active_orders(self):
+        """
+        Fetch active orders
+        """
         nonce = self._nonce()
         body = {}
-        payloadObject = {
-            'request':'v1/order/new',
-            'nonce':str(int(time.time()*1000000)), #convert to string
-            'options':{
-                'method':'bitcoin',
-                'wallet_name':'exchange',
-                'renew':'1'}
-        }
-        rawBody = json.dumps(payloadObject)
-        path = "/v1/deposit/new"
+        rawBody = json.dumps(body)
+        path = "v2/auth/r/orders"
 
 
         print(self.BASE_URL + path)
@@ -71,16 +71,19 @@ class Bitfinex:
 
         print(headers)
         print(rawBody)
+
+
         print("requests.post("+self.BASE_URL + path + ", headers=" + str(headers) + ", data=" + rawBody + ", verify=True)")
         r = requests.post(self.BASE_URL + path, headers=headers, data=rawBody, verify=True)
 
         if r.status_code == 200:
+            print(r.content)
             return r.json()
         else:
             print(r.status_code)
-            print(r)
+            #print(r)
             return ''
-    
+
     def sync(self):
         try:
             r = requests.get(self._url)
@@ -95,4 +98,48 @@ class Bitfinex:
                 return float(self._json[index][7])
         print("---------------------------------VALUE NOT FOUND---------------------------------")
         return -1
-        
+    
+    def get_address(self, symbol):
+        """
+        Fetch active orders
+        """
+        nonce = self._nonce()
+        body = {
+            "request": "/v1/account_infos",
+            "nonce": self._nonce(),
+            #"method": "bitcoin",
+            #"wallet_name": "exchange",
+            #"renew": 1
+            
+        }
+        tua_mamma = bytes(json.dumps(body),  "utf-8")
+        print(type(tua_mamma))
+        rawBody = base64.b64encode(tua_mamma).decode("utf-8")
+        print(rawBody)
+        stringbody = (tua_mamma.decode("utf-8"))
+        print(stringbody)
+
+        #= json.dumps(body)
+        path = "/v1/account_infos"
+
+
+        print(self.BASE_URL + path)
+        print(nonce)
+
+
+        headers = self._headers(path, nonce, rawBody)
+
+        print(headers)
+        print(rawBody)
+
+
+        print("requests.post("+self.BASE_URL + path + ", headers=" + str(headers) + ", data=" + rawBody + ", verify=True)")
+        r = requests.post(self.BASE_URL + path, headers=headers, data=rawBody)
+
+        if r.status_code == 200:
+            print(r.content)
+            return r.json()
+        else:
+            print(r.status_code)
+            #print(r)
+            return ''
