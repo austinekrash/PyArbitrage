@@ -66,46 +66,8 @@ class Bittrex:
             self.costum_print(res.get('result').get('Address'))
             return res.get('result').get('Address')
         else:
-            self.costum_print('[BITTREX] some problems')
+            self.costum_print(' some problems')
             sys.exit(1)
-
-
-    def get_balance(self, symbol):
-        #con getbalances ottienei i balance ed anche i deposit addreesssssssssssss di tutte
-        #dice anceh quando vailable e pending!!!!!!!!!!!!!!!!!
-        auth = self._url_account+'getbalance?apikey='+self._apiKey+'&currency='+symbol+'&nonce='+self.get_nonce()
-        signature = hmac.new(self._secretKey, auth.encode('utf-8'), hashlib.sha512).hexdigest()
-        headers = {'apisign': signature}
-        try:
-            r = requests.get(auth, headers=headers)
-            res = json.loads(r.content)
-            self.costum_print(r.content)
-        except (r.status_code != 200):
-            raise Exception('Some problems retrieving price: '+r.status_code)
-        if( True is json.loads(r.content).get('success')):
-            self.costum_print(res.get('result').get('Balance'))
-            return res.get('result').get('Balance')
-        else:
-            self.costum_print('[BITTREX] some problems')
-            sys.exit(1)
-
-    def get_balances(self, symbol):
-        auth = self._url_account+'getbalances?apikey='+self._apiKey+'&currency='+symbol+'&nonce='+self.get_nonce()
-        signature = hmac.new(self._secretKey, auth.encode('utf-8'), hashlib.sha512).hexdigest()
-        headers = {'apisign': signature}
-        try:
-            r = requests.get(auth, headers=headers)
-            res = json.loads(r.content)
-            self.costum_print(r.content)
-        except (r.status_code != 200):
-            raise Exception('Some problems retrieving price: '+r.status_code)
-        if( True is res.get('success')):
-            self.costum_print(res.get('result'))
-            return res.get('result')
-        else:
-            self.costum_print('[BITTREX] some problems')
-            sys.exit(1)
-
 
     #paymentid CryptoNotes/BitShareX/Nxt/XRP
     def withdraw(self, symbol, quantity, to_address, paymentid = None):
@@ -125,10 +87,48 @@ class Bittrex:
             self.costum_print(res.get('result'))
             return res.get('result')
         else:
-            self.costum_print('[BITTREX] some problems')
+            self.costum_print(' some problems')
             sys.exit(1)
 
-    def buy_limit(self, market, quantitiy, rate):
+    def get_balance(self, symbol):
+        #con getbalances ottienei i balance ed anche i deposit addreesssssssssssss di tutte
+        #dice anceh quando vailable e pending!!!!!!!!!!!!!!!!!
+        auth = self._url_account+'getbalance?apikey='+self._apiKey+'&currency='+symbol+'&nonce='+self.get_nonce()
+        signature = hmac.new(self._secretKey, auth.encode('utf-8'), hashlib.sha512).hexdigest()
+        headers = {'apisign': signature}
+        try:
+            r = requests.get(auth, headers=headers)
+            res = json.loads(r.content)
+            self.costum_print(r.content)
+        except (r.status_code != 200):
+            raise Exception('Some problems retrieving price: '+r.status_code)
+        if( True is json.loads(r.content).get('success')):
+            self.costum_print(res.get('result').get('Balance'))
+            return res.get('result').get('Balance')
+        else:
+            self.costum_print('some problems')
+            sys.exit(1)
+
+    def get_balances(self):
+        auth = self._url_account+'getbalances?apikey='+self._apiKey+'&nonce='+self.get_nonce()
+        signature = hmac.new(self._secretKey, auth.encode('utf-8'), hashlib.sha512).hexdigest()
+        headers = {'apisign': signature}
+        try:
+            r = requests.get(auth, headers=headers)
+            res = json.loads(r.content)
+            self.costum_print(r.content)
+        except (r.status_code != 200):
+            raise Exception('Some problems retrieving price: '+r.status_code)
+        if( True is res.get('success')):
+            self.costum_print(res.get('result'))
+            return res.get('result')
+        else:
+            self.costum_print(' some problems')
+            sys.exit(1)
+
+
+
+    def buy_limitR(self, market, quantitiy, rate, price = None):
         auth = self._url_account+'buylimit?apikey='+self._apiKey+'&market='+market+'&quantity='+quantitiy+'&rate='+rate+'&nonce='+self.get_nonce()
         signature = hmac.new(self._secretKey, auth.encode('utf-8'), hashlib.sha512).hexdigest()
         headers = {'apisign': signature}
@@ -142,10 +142,10 @@ class Bittrex:
             self.costum_print(res.get('result'))
             return res.get('result')
         else:
-            self.costum_print('[BITTREX] some problems')
+            self.costum_print(' some problems')
             sys.exit(1)
 
-    def sell_limit(self, market, quantitiy, rate):
+    def sell_limitR(self, market, quantitiy, rate, price = None):
         auth = self._url_account+'selllimit?apikey='+self._apiKey+'&market='+market+'&quantity='+quantitiy+'&rate='+rate+'&nonce='+self.get_nonce()
         signature = hmac.new(self._secretKey, auth.encode('utf-8'), hashlib.sha512).hexdigest()
         headers = {'apisign': signature}
@@ -159,7 +159,39 @@ class Bittrex:
             self.costum_print(res.get('result'))
             return res.get('result')
         else:
-            self.costum_print('[BITTREX] some problems')
+            self.costum_print(' some problems')
             sys.exit(1)
 
-    #LA CANCEL ORDER?
+    def get_open_orders(self, market):
+        auth = self._url_market+'getopenorders?apikey='+self._apiKey+'&market='+market+'&nonce='+self.get_nonce()
+        signature = hmac.new(self._secretKey, auth.encode('utf-8'), hashlib.sha512).hexdigest()
+        headers = {'apisign': signature}
+        try:
+            r = requests.get(auth, headers=headers)
+            res = json.loads(r.content)
+            self.costum_print(r.content)
+        except (r.status_code != 200):
+            raise Exception('Some problems retrieving price: '+r.status_code)
+        if( True is res.get('success')): #occhio a questo controllo perchè bittrex restituisce 'true' minuscolo
+            self.costum_print('N° open orders '+str(len(res.get('result'))))  #STAMPA SOLO LUNGHRZZA PERCHÈ DURANTE IL TEST NON AVEVAMO OPEN ORDER E NON ERO SICURO DI COME PRENDERE I VALORI DEL JSON
+            return len(res.get('result'))
+        else:
+            self.costum_print(' some problems')
+            sys.exit(1)
+
+    def cancel_order(self, uuid):
+            auth = self._url_market+'cancel?apikey='+self._apiKey+'&uuid='+uuid+'&nonce='+self.get_nonce()
+            signature = hmac.new(self._secretKey, auth.encode('utf-8'), hashlib.sha512).hexdigest()
+            headers = {'apisign': signature}
+            try:
+                r = requests.get(auth, headers=headers)
+                res = json.loads(r.content)
+                self.costum_print(r.content)
+            except (r.status_code != 200):
+                raise Exception('Some problems retrieving price: '+r.status_code)
+            if( True is res.get('success')): #occhio a questo controllo perchè bittrex restituisce 'true' minuscolo
+                self.costum_print('canceled order: '+str(res.get('result')['uuid']))  #STAMPA SOLO LUNGHRZZA PERCHÈ DURANTE IL TEST NON AVEVAMO OPEN ORDER E NON ERO SICURO DI COME PRENDERE I VALORI DEL JSON
+                return True
+            else:
+                self.costum_print(' some problems')
+                sys.exit(1)
