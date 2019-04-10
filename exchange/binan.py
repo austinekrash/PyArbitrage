@@ -47,7 +47,7 @@ class Binance():
                 #self.costum_print("[BITTREX] "+self._json[index]['MarketName']+" "+str(self._json[index]['Last']))
                 return float(self._json[index]['Last'])
         self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
-        sys.exit(1)
+        return -1
 
     def get_deposit_address(self, symbol):
         if (self.__is_frozen(symbol) == -1):
@@ -59,7 +59,7 @@ class Binance():
             return res['address'], res['addressTag']
         else:
             self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
-            sys.exit(1)
+            return -1
 
     def withdraw(self, symbol, to_address, amount, addressTag = None): #To be tested
         if addressTag is None:
@@ -90,8 +90,8 @@ class Binance():
         self.costum_print(res)
         return res
 
-    def get_open_orders(self, market):
-        res = self._client.get_open_orders(symbol=market)
+    def get_open_orders(self):
+        res = self._client.get_open_orders()
         self.costum_print(res)
         return res
 
@@ -112,7 +112,7 @@ class Binance():
                 if(key == symbol):
                     return value['depositStatus'], value['withdrawStatus']
             self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
-            sys.exit(1)
+            return -1
         else:
             self.costum_print('Frozen')
             return -1

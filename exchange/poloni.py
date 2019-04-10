@@ -59,24 +59,30 @@ class Poloniex():
         elif res['success'] == 0:
             listAddress = self.return_deposit_address()
             return listAddress[symbol]
+            #todo nel caso di errore return -1
     
     def return_deposit_address(self):
         return self.pol.returnDepositAddresses()
-
     
-    def return_complete_balances(self):
+    def get_balances(self):
         return self.pol.returnCompleteBalances()
+        #return -1 se errore
 
-    def return_crypto_balances(self, symbol):
+    def get_balance(self, symbol):
         return self.pol.returnCompleteBalances()[symbol]
+        #return tupla 
+        #return -1 se errore
         
-    def return_available_account_balances(self):
+    def get_available_account_balances(self):
         return self.pol.returnAvailableAccountBalances()
+        #return -1 se errore
 
-    def return_open_orders(self):
+    def get_open_orders(self):
         return self.pol.returnOpenOrders()
+        #da testare e far restituire id
+        #assumiamo che ci sia solo 1 ordine
     
-    def buy_currency(self, currencyPair, rate, amount, orderType=False):
+    def buy_currency(self, currencyPair, amount, rate, orderType=False):
         """You may optionally set "orderType"
         to "fillOrKill", "immediateOrCancel" or "postOnly". A fill-or-kill order
         will either fill in its entirety or be completely aborted. An
@@ -106,9 +112,13 @@ class Poloniex():
     def move_order(self, orderNumber, rate, amount=False, orderType=False):
         return self.pol.moveOrder(orderNumber, rate, amount=False, orderType=False)
 
-    def withdraw(self, currency, amount, address, paymentId=False):
+    def withdraw(self, currency, address, amount, paymentId=False):
         return self.pol.withdraw(currency, amount, address, paymentId=False)
+        #vedere come funziona
+        #vedere errori tipo min withdraw
 
     def return_fee_info(self):
         return self.pol.returnFeeInfo()
+        #da vedere poi cosa far restituire
+        #per ora non serve
 

@@ -49,7 +49,7 @@ class Bittrex:
                 #self.costum_print("[BITTREX] "+self._json[index]['MarketName']+" "+str(self._json[index]['Last']))
                 return float(self._json[index]['Last'])
         self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
-        sys.exit(1)
+        return -1
 
     def get_deposit_address(self, symbol):
         auth = self._url_account+'getdepositaddress?apikey='+self._apiKey+'&currency='+symbol+'&nonce='+self.get_nonce()
