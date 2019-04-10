@@ -1,7 +1,7 @@
 import psycopg2
 import requests
 import json
-from binance import Binance
+from binan import Binance
 from bitfinex import Bitfinex
 from bittrex import Bittrex
 from cex import Cex
@@ -75,5 +75,3 @@ for d in orderedList:
 
 for i in new_l:
     print(i)
-
-print(Bitfinex.get_address('BTC'))

@@ -7,6 +7,7 @@ from poloni import Poloniex
 
 
 
+def arbitrage_fee(startExchange, endExchange, symbolStart, symbolEnd,):
 
 
 
