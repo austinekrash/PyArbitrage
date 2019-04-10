@@ -1,3 +1,4 @@
+import psycopg2
 from cex import Cex
 from binan import Binance
 from bitfinex import Bitfinex
