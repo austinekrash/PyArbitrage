@@ -5,14 +5,12 @@ from bittrex import Bittrex
 from poloni import Poloniex
 
 
+BINANCEapiKey = 'WXYox2eh9V8fUiLvjdW9f8xkh3q30EpzxGaeLQvxMZ0TTUyDSaIJliEmAXr2NtYN'
+BINANCEsecretKey = 'qbXdJU82w1QKpjHe6OFRMdJMxbZgQuHigLRzssDqf3TCpEaxyAaHyrGolDQzbrbD'
 
 
-
-
-
-
-
-
+BITTREXapiKey = 'd94bf4036b9841729f2d5100ee9132a4'
+BITTREXsecretKey = '672e4f9fea3b4628b1bf5617fbdb22be'
 
 
 '''
@@ -33,20 +31,12 @@ binance.get_deposit_address('PAX')
 binance.get_balance('XRP')
 binance.get_balances()
 print(binance.is_frozen('BTC'))
-<<<<<<< HEAD
 '''
 '''
 bitfinex = Bitfinex.Factory()
 bitfinex.sync()
 bitfinex.get_price_pairs('ETHBTC')
 '''
-=======
-
-
-bitfinex = Bitfinex.Factory()
-bitfinex.sync()
-bitfinex.get_price_pairs('ETHBTC')
->>>>>>> 615940a931933b97e9cffd2edd01f193fb6c3867
 
 bittrex = Bittrex.Factory()
 bittrex.sync()
@@ -54,11 +44,7 @@ bittrex.sync()
 bittrex.get_deposit_address('BTC')
 #bittrex.get_balances()
 #bittrex.get_open_orders('BTC-GRIN')
-<<<<<<< HEAD
 '''
-=======
-
->>>>>>> 615940a931933b97e9cffd2edd01f193fb6c3867
 bittrex = Bittrex.Factory()
 bittrex.sync()
 bittrex.get_price_pairs('BTC-GRIN')

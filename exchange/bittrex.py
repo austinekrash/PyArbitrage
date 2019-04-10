@@ -14,21 +14,19 @@ class Bittrex:
     _url_account = 'https://api.bittrex.com/api/v1.1/account/'
     _url_market = 'https://api.bittrex.com/api/v1.1/market/'
     
-    _apiKey = 'd94bf4036b9841729f2d5100ee9132a4'
-    _secretKey = bytearray('672e4f9fea3b4628b1bf5617fbdb22be', "utf-8")#non so se serve la secret key
-
     @staticmethod
-    def Factory():
+    def Factory(apiKey, secreKey):
         if Bittrex.__instance == None:
-            Bittrex()
+            Bittrex((apiKey, secreKey)
         return Bittrex.__instance
 
-    def __init__(self):
+    def __init__(self, apiKey, secretKey):
         if Bittrex.__instance != None:
             raise Exception("This class is a singleton.")
         else:
             Bittrex.__instance = self
-
+            _apiKey = apiKey
+            _secretKey = bytearray(secreKey, "utf-8")
     @staticmethod
     def get_nonce():
         return str(int(time.time()))
