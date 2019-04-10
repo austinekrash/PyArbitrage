@@ -2,20 +2,29 @@ from cex import Cex
 from binan import Binance
 from bitfinex import Bitfinex
 from bittrex import Bittrex
-from poloni import Poloniex
+#from poloni import Poloniex
 
 
 BINANCEapiKey = 'WXYox2eh9V8fUiLvjdW9f8xkh3q30EpzxGaeLQvxMZ0TTUyDSaIJliEmAXr2NtYN'
 BINANCEsecretKey = 'qbXdJU82w1QKpjHe6OFRMdJMxbZgQuHigLRzssDqf3TCpEaxyAaHyrGolDQzbrbD'
 
-
-def arbitrage_fee(startExchange, endExchange, symbolStart, symbolEnd,):
-
+BITTREXapiKey = 'd94bf4036b9841729f2d5100ee9132a4'
+BITTREXsecretKey = '672e4f9fea3b4628b1bf5617fbdb22be'
 
 POLONIEXapiKey = '8QF9DS6A-YJWQQLWW-ZKUM8YV8-YJ5HG70E'
-pOLONIEXsecretKey = '6dd1afa15f71fe6c77bb0fd9348058f9d45deb99d0e9c5aed2752f974919f5b381db5f5e458c558e720805a1d840f56064253cce64a4c84fc0b05ad8f51d8ecc'
+POLONIEXsecretKey = '6dd1afa15f71fe6c77bb0fd9348058f9d45deb99d0e9c5aed2752f974919f5b381db5f5e458c558e720805a1d840f56064253cce64a4c84fc0b05ad8f51d8ecc'
+
+BITFINEXapiKey = 'SxBHFSegUgIjDXCKCJSbGRPAxmGdgNCVFRStoVkLaaD'
+BITFINEXsecretKey = '7Ud65qmtjg1lFA4j1u8e5tu3CeU4bL2V4Ni79an6B0P'
 
 
+bitfinex = Bitfinex.Factory(BITFINEXapiKey,BITFINEXsecretKey)
+bitfinex.sync()
+#bitfinex.get_price_pairs('tAGIUSD')
+#print(bitfinex.get_deposit_address('santiment')) #Oocio
+#bitfinex.withdraw()# test
+#bitfinex.get_balance('btc')  #“trading”, “deposit” or “exchange”
+bitfinex.get_withdraw_fee('btc')
 '''
 p = Poloniex.Factory()
 print(p.return_fee_info())

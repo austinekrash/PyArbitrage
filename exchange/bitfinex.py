@@ -4,8 +4,8 @@ import hashlib
 import hmac
 import time #for nonce
 import base64
-
-
+import bitfinexpy
+import sys
 
 class Bitfinex:
 
@@ -13,76 +13,28 @@ class Bitfinex:
     _table = 'bitfinex'
     _json = None
     _url = 'https://api-pub.bitfinex.com/v2/tickers?symbols=ALL'
-    BASE_URL = "https://api.bitfinex.com/"
-    KEY="RKv5MNSRaHCzaxF6OmYh7eIC3qc0v657izJ8EjzEHVd"
-    SECRET= bytearray("xaXTd9er3aEelDpoBm9aS4YVeFNckmj2YgV6jVdiDod", "utf-8")
+    _bitfinex = None
 
     @staticmethod
-    def Factory():
+    def Factory(apiKey, secretKey):
         if Bitfinex.__instance == None:
-            Bitfinex()
+            Bitfinex(apiKey, secretKey)
         return Bitfinex.__instance
 
-    def __init__(self):
+    def __init__(self, apiKey, secretKey):
         if Bitfinex.__instance != None:
             raise Exception("This class is a singleton.")
         else:
             Bitfinex.__instance = self
+            self._bitfinex = bitfinexpy.API(environment="live", key=apiKey , secret_key=secretKey)
 
-    def _nonce(self):
-        """
-        Returns a nonce
-        Used in authentication
-        """
-        return str(int(round(time.time() * 1000)))
+    @staticmethod
+    def get_nonce():
+        return str(int(time.time()))
+    
+    def costum_print(self, text):
+        print('['+self.__class__.__name__.upper()+'] '+str(text))
 
-    def _headers(self, path, nonce, body):
-        
-        signature =  path + nonce + body
-        print("Signing: " + signature)
-        h = hmac.new(self.SECRET, signature.encode('utf8'), hashlib.sha384)
-        signature = h.hexdigest()
-
-        return {
-            #"bfx-nonce": nonce,
-            #"bfx-apikey": self.KEY,
-            #"bfx-signature": signature,
-            #"content-type": "application/json"
-            'X-BFX-APIKEY': self.KEY,
-            'X-BFX-PAYLOAD': body,
-            'X-BFX-SIGNATURE': signature
-        }
-
-    def active_orders(self):
-        """
-        Fetch active orders
-        """
-        nonce = self._nonce()
-        body = {}
-        rawBody = json.dumps(body)
-        path = "v2/auth/r/orders"
-
-
-        print(self.BASE_URL + path)
-        print(nonce)
-
-
-        headers = self._headers(path, nonce, rawBody)
-
-        print(headers)
-        print(rawBody)
-
-
-        print("requests.post("+self.BASE_URL + path + ", headers=" + str(headers) + ", data=" + rawBody + ", verify=True)")
-        r = requests.post(self.BASE_URL + path, headers=headers, data=rawBody, verify=True)
-
-        if r.status_code == 200:
-            print(r.content)
-            return r.json()
-        else:
-            print(r.status_code)
-            #print(r)
-            return ''
 
     def sync(self):
         try:
@@ -94,52 +46,85 @@ class Bitfinex:
     def get_price_pairs(self, pair_symbol):
         for index in range(len(self._json)):
             if pair_symbol.lower() in self._json[index][0].lower():
-                #print("[BITFINEX] "+pair_symbol+" "+str(self._json[index][7]))
+                self.costum_print(pair_symbol+" "+str(self._json[index][7]))
                 return float(self._json[index][7])
-        print("---------------------------------VALUE NOT FOUND---------------------------------")
-        return -1
+        self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
+        sys.exit(1)
     
-    def get_address(self, symbol):
-        """
-        Fetch active orders
-        """
-        nonce = self._nonce()
-        body = {
-            "request": "/v1/account_infos",
-            "nonce": self._nonce(),
-            #"method": "bitcoin",
-            #"wallet_name": "exchange",
-            #"renew": 1
-            
-        }
-        tua_mamma = bytes(json.dumps(body),  "utf-8")
-        print(type(tua_mamma))
-        rawBody = base64.b64encode(tua_mamma).decode("utf-8")
-        print(rawBody)
-        stringbody = (tua_mamma.decode("utf-8"))
-        print(stringbody)
-
-        #= json.dumps(body)
-        path = "/v1/account_infos"
-
-
-        print(self.BASE_URL + path)
-        print(nonce)
-
-
-        headers = self._headers(path, nonce, rawBody)
-
-        print(headers)
-        print(rawBody)
-
-
-        print("requests.post("+self.BASE_URL + path + ", headers=" + str(headers) + ", data=" + rawBody + ", verify=True)")
-        r = requests.post(self.BASE_URL + path, headers=headers, data=rawBody)
-
-        if r.status_code == 200:
-            print(r.content)
-            return r.json()
+    def get_deposit_address(self, symbol): #symbol NON è BTC ma bitcoin mentre altre no
+        res = self._bitfinex.deposit(method=symbol.lower(), wallet_name='exchange', renew=1)
+        self.costum_print(res)
+        if(res['result'] == 'success'): #
+            if('address_pool' in res):
+                return res['address'], res['address_pool']
+            else:
+                return res['address']
         else:
-            print(r.status_code)
-            #print(r)
-            return ''
+            self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
+            sys.exit(1)
+
+    def withdraw(self, symbol, to_address, amount, addressTag = None): #To be tested
+        if addressTag is None:
+            res = self._bitfinex.withdrawal('exchange', to_address, amount)
+        else:
+            res = self._bitfinex.withdrawal('exchange', to_address, amount, payment_id=addressTag)
+        self.costum_print(res)
+        return res['status']
+
+
+    def get_balance(self, symbol): #“trading”, “deposit” or “exchange” da capire quale ci serve a noi
+        res = self._bitfinex.wallet_balances()
+        for item in res:
+            if item['currency'] == symbol.lower():
+                print(item['type'], item['amount'],item['available'])
+                return(item['type'], item['amount'],item['available'])
+        self.costum_print(res)
+        self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
+        sys.exit(1)
+
+
+    def get_balances(self):
+        res = self._bitfinex.wallet_balances()
+        self.costum_print('bella '+str(res))
+        return res
+
+
+    #SONO DIVERSI GLI ARGOMENTI DELLE LIMIT RISPETTO A BIIREX
+    def buy_limitP(self, market, quantitiy, price, rate = None):
+        res = self._bitfinex.new_offer(market, quantitiy, price, 'buy', 'fill-or-kill')
+        self.costum_print(str(res))
+        return res['id']
+
+    def sell_limitP(self, market, quantitiy,  price, rate = None):
+        res = self._bitfinex.new_offer(market, quantitiy, price, 'sell', 'fill-or-kill')
+        self.costum_print(str(res))
+        return res['id']   #check su questo
+
+
+    def get_open_orders(self, market): #diversa dalle altre
+        res = self._bitfinex.active_orders()
+        self.costum_print(str(res))
+        for item in res:
+            if item['symbol'] == market:
+                return item['id']
+        self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
+        sys.exit(1)
+
+    def cancel_order(self, market, uuid): # qui non serve market
+        res = self._bitfinex.cancel_order(uuid)
+        self.costum_print(str(res))
+        return res['id']
+    
+    def get_withdraw_fee(self, symbol): #MAKER e TAKER NON SONO WITHDRAW FEE
+        res = self._bitfinex.account_infos()
+        #self.costum_print(res[0]['fees'])
+        for item in res[0]['fees']:
+            #self.costum_print(item['pairs'])
+            if item['pairs'] == symbol.upper():
+                self.costum_print(item)
+                return item['maker_fees'], item['taker_fees']
+        self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
+        sys.exit(1)
+    
+    def __is_frozen(self, symbol): #return depositStatus, withdrawStatus
+        pass

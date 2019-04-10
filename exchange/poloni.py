@@ -50,7 +50,7 @@ class Poloniex():
                 #print("[POLONIEX] "+price+" "+symbol)
                 return float(price)
         print("---------------------------------VALUE NOT FOUND---------------------------------")
-        return -1
+        sys.exit(1)
     
     def get_deposit_address(self, symbol):
         res = self.pol.generateNewAddress(symbol)
@@ -62,7 +62,6 @@ class Poloniex():
     
     def return_deposit_address(self):
         return self.pol.returnDepositAddresses()
-
     
     def return_complete_balances(self):
         return self.pol.returnCompleteBalances()
