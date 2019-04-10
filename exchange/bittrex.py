@@ -71,6 +71,7 @@ class Bittrex:
             if(res.get('messagge') == 'CURRENCY_OFFLINE'):
                 return -1
             sys.exit(1)
+        #aggiungere tag su monete tipo ripple
 
     #paymentid CryptoNotes/BitShareX/Nxt/XRP
     def withdraw(self, symbol, quantity, to_address, paymentid = None):
@@ -91,7 +92,7 @@ class Bittrex:
             return res.get('result')
         else:
             self.costum_print(' some problems')
-            sys.exit(1)
+            return -1
 
     def get_balance(self, symbol):
         #con getbalances ottienei i balance ed anche i deposit addreesssssssssssss di tutte
@@ -108,9 +109,11 @@ class Bittrex:
         if( True is json.loads(r.content).get('success')):
             self.costum_print(res.get('result').get('Balance'))
             return res.get('result').get('Balance')
+            #deve restituire una tupla
         else:
             self.costum_print('some problems')
-            sys.exit(1)
+            return -1
+        #restituire la tupla
 
     def get_balances(self):
         auth = self._url_account+'getbalances?apikey='+self._apiKey+'&nonce='+self.get_nonce()
@@ -127,7 +130,7 @@ class Bittrex:
             return res.get('result')
         else:
             self.costum_print(' some problems')
-            sys.exit(1)
+            return -1
 
 
 
@@ -146,7 +149,7 @@ class Bittrex:
             return res.get('result')
         else:
             self.costum_print(' some problems')
-            sys.exit(1)
+            return -1
 
     def sell_limitR(self, market, quantitiy, rate, price = None):
         auth = self._url_account+'selllimit?apikey='+self._apiKey+'&market='+market+'&quantity='+quantitiy+'&rate='+rate+'&nonce='+self.get_nonce()
@@ -163,7 +166,7 @@ class Bittrex:
             return res.get('result')
         else:
             self.costum_print(' some problems')
-            sys.exit(1)
+            return -1
 
     def get_open_orders(self, market):
         auth = self._url_market+'getopenorders?apikey='+self._apiKey+'&market='+market+'&nonce='+self.get_nonce()
@@ -177,10 +180,10 @@ class Bittrex:
             raise Exception('Some problems retrieving price: '+r.status_code)
         if( True is res.get('success')): #occhio a questo controllo perchè bittrex restituisce 'true' minuscolo
             self.costum_print('N° open orders '+str(len(res.get('result'))))  #STAMPA SOLO LUNGHRZZA PERCHÈ DURANTE IL TEST NON AVEVAMO OPEN ORDER E NON ERO SICURO DI COME PRENDERE I VALORI DEL JSON
-            return len(res.get('result'))
+            return res.get('result')
         else:
             self.costum_print(' some problems')
-            sys.exit(1)
+            return -1
 
     def cancel_order(self, uuid):
             auth = self._url_market+'cancel?apikey='+self._apiKey+'&uuid='+uuid+'&nonce='+self.get_nonce()
@@ -194,7 +197,7 @@ class Bittrex:
                 raise Exception('Some problems retrieving price: '+r.status_code)
             if( True is res.get('success')): #occhio a questo controllo perchè bittrex restituisce 'true' minuscolo
                 self.costum_print('canceled order: '+str(res.get('result')['uuid']))  #STAMPA SOLO LUNGHRZZA PERCHÈ DURANTE IL TEST NON AVEVAMO OPEN ORDER E NON ERO SICURO DI COME PRENDERE I VALORI DEL JSON
-                return True
+                return res.get('result')
             else:
                 self.costum_print(' some problems')
-                sys.exit(1)
+                return -1
