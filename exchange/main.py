@@ -16,10 +16,8 @@ def is_advantages(startAmount, endAmount):
 
 
 def arbitrage_fee(startExchange, endExchange, symbolStart, symbolEnd, priceStart, priceEnd, startAmount):
-    try:
-        conn = psycopg2.connect("dbname='arbitraggio' user='ale' host='localhost' password='pippo'")
-    except:
-        print("I am unable to connect to the database")
+
+    global conn
     #SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee  WHERE symbol = 'BTC' AND exchange = 'binance'
     cur = conn.cursor()
 
@@ -36,7 +34,10 @@ def arbitrage_fee(startExchange, endExchange, symbolStart, symbolEnd, priceStart
     endWithdrawal = startWithdrawal - depositFee
     sellCurr = endWithdrawal - endWithdrawal * taker
 
-
+try:
+    conn = psycopg2.connect("dbname='arbitraggio' user='ale' host='localhost' password='pippo'")
+except:
+    print("I am unable to connect to the database")
 arbitrage_fee('bitfinex', 'binance', 'BTC', 'BTC', '1', '1', '10', conn)
 
 
