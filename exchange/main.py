@@ -2,7 +2,14 @@ from cex import Cex
 from binan import Binance
 from bitfinex import Bitfinex
 from bittrex import Bittrex
-from poloniex import Poloniex
+from poloni import Poloniex
+
+p = Poloniex.Factory()
+print(p.return_fee_info())
+#print(p.return_deposit_address())
+#polo = Poloniex()
+
+
 
 
 BINANCEapiKey = 'WXYox2eh9V8fUiLvjdW9f8xkh3q30EpzxGaeLQvxMZ0TTUyDSaIJliEmAXr2NtYN'
@@ -32,11 +39,14 @@ bittrex.sync()
 bittrex.get_deposit_address('BTC')
 #bittrex.get_balances()
 #bittrex.get_open_orders('BTC-GRIN')
-
 '''
+bittrex = Bittrex.Factory()
+bittrex.sync()
+bittrex.get_price_pairs('BTC-GRIN')
+bittrex.getDepositAddress('test')
+
 bitfinex = Bitfinex().Factory()
 bitfinex.get_address('BTC')
-
 
 poloniex = Poloniex.Factory()
 poloniex.sync()
