@@ -38,7 +38,7 @@ try:
     conn = psycopg2.connect("dbname='arbitraggio' user='ale' host='localhost' password='pippo'")
 except:
     print("I am unable to connect to the database")
-arbitrage_fee('bitfinex', 'binance', 'BTC', 'BTC', '1', '1', '10', conn)
+arbitrage_fee('bitfinex', 'binance', 'BTC', 'BTC', '1', '1', '10')
 
 
 POLONIEXapiKey = '8QF9DS6A-YJWQQLWW-ZKUM8YV8-YJ5HG70E'
