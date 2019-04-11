@@ -33,11 +33,11 @@ def open_db():
     except:
         costum_print("I am unable to connect to the database")
         sys.exit(1)
+    cur = conn.cursor()
     return conn, cur
 
 def fetch_views_db(cur):
     intersectionView = []
-    cur = conn.cursor()
     cur.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'VIEW'")
     records = cur.fetchall()
     for x in records:
