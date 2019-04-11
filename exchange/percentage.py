@@ -105,8 +105,8 @@ def remove_sort_duplicates(percentages):
 
 ############################## FEE ########################################
 
-def is_advantages(startAmountBtc, endAmountBtc):
-    if startAmountBtc >= endAmountBtc:
+def is_advantages(startAmount, endAmount):
+    if startAmount >= endAmount:
         return False
     else:
         return True
@@ -125,10 +125,11 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
     startWithdrawal = setAmount - (setAmount * takerStart/100) - withdrawalFee
     endWithdrawal = startWithdrawal - depositFee
     sellCurr = float(endWithdrawal - endWithdrawal * takerEnd /100)
-    startBtcAmount = float(priceStart)*float(setAmount)
-    endBtcAmount = float(priceEnd)*sellCurr
-    if is_advantages(startBtcAmount, endBtcAmount):
-        return {"startBtcAmount": startBtcAmount, "endBtcAmount": endBtcAmount, "percentage": percentage ,"startExchange": startExchange, "startSymbol": pairStart, "startPrice": priceStart, "endExchange": endExchange, "endSymbol": pairEnd, "endPrice": priceEnd}
+    startAmount = float(priceStart)*float(setAmount)
+    endAmount = float(priceEnd)*sellCurr
+    if is_advantages(startAmount, endAmount):
+        percentage_fee = (endAmount - startAmount) / startAmount*100
+        return {"startAmount": startAmount, "endAmount": endAmount, "percentage": percentage, "percentage_fee": percentage_fee ,"startExchange": startExchange, "startSymbol": pairStart, "startPrice": priceStart, "endExchange": endExchange, "endSymbol": pairEnd, "endPrice": priceEnd}
     else:
         -1
 
@@ -144,8 +145,7 @@ print('-------------------------------------------------------------------------
 
 for item in orderded_nop_percentages:
     print(item['startExchange']+" "+item['endExchange']+" "+item['startSymbol']+" "+item['endSymbol']+" "+str(item['startPrice'])+" "+str(item['endPrice'])+" "+str(100)+" "+str(item['percentage']))
-
-    #print(arbitrage_fee(item['startExchange'], item['endExchange'], item['startSymbol'], item['endSymbol'], item['startPrice'], item['endPrice'], 100, item['percentage'], conn, cur))
+    print(arbitrage_fee(item['startExchange'], item['endExchange'], item['startSymbol'], item['endSymbol'], item['startPrice'], item['endPrice'], 100, item['percentage'], conn, cur))
 
 
 print('-----------------------------------------------------------------------------------------')

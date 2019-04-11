@@ -23,8 +23,8 @@ A_POLONIEXsecretKey = '16962e88b0e3349e2f774d6eb5dd5bde54a59bcd120c637e0e2cca5db
 A_BITFINEXapiKey = 'SxBHFSegUgIjDXCKCJSbGRPAxmGdgNCVFRStoVkLaaD'
 A_BITFINEXsecretKey = '7Ud65qmtjg1lFA4j1u8e5tu3CeU4bL2V4Ni79an6B0P'
 
-def is_advantages(startAmountBtc, endAmountBtc):
-    if startAmountBtc >= endAmountBtc:
+def is_advantages(startAmount, endAmount):
+    if startAmount >= endAmount:
         return False
     else:
         return True
@@ -58,11 +58,12 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
     #symbol2 = cur.fetchall()
     #price1 = eval(startExchange).get_price_pairs(symbol1)
     #price2 = eval(endExchange).get_price_pairs(symbol2)
-    startBtcAmount = float(priceStart)*float(setAmount)
-    endBtcAmount = float(priceEnd)*sellCurr
-    if is_advantages(startBtcAmount, endBtcAmount):
+    startAmount = float(priceStart)*float(setAmount)
+    endAmount = float(priceEnd)*sellCurr
+    if is_advantages(startAmount, endAmount):
+        percentage_fee = (endAmount - startAmount) / startAmount*100
         #return (startExchange, endExchange, pairStart, pairEnd, priceStart, priceEnd)
-        return {"startBtcAmount": startBtcAmount, "endBtcAmount": endBtcAmount, "percentage": percentage ,"startExchange": startExchange, "startSymbol": pairStart, "startPrice": priceStart, "endExchange": endExchange, "endSymbol": pairEnd, "endPrice": priceEnd}
+        return {"startAmount": startAmount, "endAmount": endAmount, "percentage": percentage, "percentage_fee": percentage_fee ,"startExchange": startExchange, "startSymbol": pairStart, "startPrice": priceStart, "endExchange": endExchange, "endSymbol": pairEnd, "endPrice": priceEnd}
 
 
 
