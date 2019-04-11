@@ -102,12 +102,49 @@ def remove_sort_duplicates(percentages):
             seen.add(t)
             no_dup_list.append(d)
     return sorted(no_dup_list, key=lambda k: k['percentage']) 
+
+############################## FEE ########################################
+
+def is_advantages(startAmountBtc, endAmountBtc):
+    if startAmountBtc >= endAmountBtc:
+        return False
+    else:
+        return True
+
+def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, priceEnd, setAmount, percentage, conn, cur):
+    symbolStart = eval(startExchange).find_asset(pairStart)
+    symbolEnd = eval(endExchange).find_asset(pairEnd)[0]
+    cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolStart +  "' AND exchange ='" + startExchange + "'")
+    start = cur.fetchall()
+    cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolEnd +  "' AND exchange ='" + endExchange + "'")
+    end = cur.fetchall()
+    withdrawalFee = start[0][1] #query
+    depositFee = end[0][2]  #query
+    takerStart = start[0][4]
+    takerEnd = end[0][4]  #query
+    startWithdrawal = setAmount - (setAmount * takerStart/100) - withdrawalFee
+    endWithdrawal = startWithdrawal - depositFee
+    sellCurr = float(endWithdrawal - endWithdrawal * takerEnd /100)
+    startBtcAmount = float(priceStart)*float(setAmount)
+    endBtcAmount = float(priceEnd)*sellCurr
+    if is_advantages(startBtcAmount, endBtcAmount):
+        return {"startBtcAmount": startBtcAmount, "endBtcAmount": endBtcAmount, "percentage": percentage ,"startExchange": startExchange, "startSymbol": pairStart, "startPrice": priceStart, "endExchange": endExchange, "endSymbol": pairEnd, "endPrice": priceEnd}
+    else:
+        -1
+
+###########################################################################
     
 binance, bitfinex, bittrex, poloniex, cex = initialize_exchanges()
 conn, cur = open_db()
 intersectionView = fetch_views_db(cur)
 percentages = compute_percentages(intersectionView, cur)
 orderded_nop_percentages = remove_sort_duplicates(percentages)
+
+print('-----------------------------------------------------------------------------------------')
+
+for item in orderded_nop_percentages:
+    print(arbitrage_fee(item['startExchange'], item['endExchange'], item['startSymbol'], item['endSymbol'], item['startPrice'], item['endPrice'], 100, item['percentage'], conn, cur))
+
 close_db(conn, cur)
 
 for perc in orderded_nop_percentages:
