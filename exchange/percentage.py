@@ -79,15 +79,15 @@ def compute_percentages(intersectionView, cur):
     return percentages
 
 def __percentage(cryptoIntersection):
-    exchange1 = (cryptoIntersection[3])[0].upper() + (cryptoIntersection[3])[1:]
-    exchange2 = (cryptoIntersection[4])[0].upper() + (cryptoIntersection[4])[1:]
+    exchange1 = (cryptoIntersection[3])
+    exchange2 = (cryptoIntersection[4])
     symbol1 = cryptoIntersection[0]
     symbol2 = cryptoIntersection[1]
     baseAsset = cryptoIntersection[2]
     print(exchange1+" "+symbol1)
     print(exchange2+" "+symbol2)
-    price1 = eval(exchange1).get_price_pairs(pair_symbol=symbol1)
-    price2 = eval(exchange2).get_price_pairs(pair_symbol=symbol2)
+    price1 = eval(exchange1).get_price_pairs(symbol1)
+    price2 = eval(exchange2).get_price_pairs(symbol2)
     if(price1 >= price2):
         percentages = (price1 - price2) / price2 * 100
         return {"percentage": percentages ,"startExchange": exchange2, "startSymbol": symbol2, "startPrice": price2, "endExchange": exchange1, "endSymbol": symbol1, "endPrice": price1}
