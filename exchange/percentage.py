@@ -71,7 +71,7 @@ def compute_percentages(intersectionView, cur):
         cryptoIntersection = []
         for x in cur.fetchall():#prendo tutte le tuple per ogni view
             cryptoIntersection.append(x)
-            print("--------------------------- "+x)
+            print("--------------------------- "+str(x))
             for item in cryptoIntersection:
                 percentages.append(__percentage(item))            
             #chiamo api prezzo su symbol
