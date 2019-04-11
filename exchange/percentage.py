@@ -70,10 +70,10 @@ def compute_percentages(intersectionView, cur):
         cur.execute("SELECT * FROM "+view)
         cryptoIntersection = []
         for x in cur.fetchall():#prendo tutte le tuple per ogni view
-            cryptoIntersection.append(x)
+            if x not in cryptoIntersection:
+                cryptoIntersection.append(x)
             for item in cryptoIntersection:
-                if item not in percentages:
-                    percentages.append(__percentage(item))            
+                percentages.append(__percentage(item))            
             #chiamo api prezzo su symbol
             #inserisco in percentages la coppia o tripla symbol std_symbol percentuale
             #non ha senso prendere anche il prezzo, perchè il prezzo va preso subito prima della vednita/Acquisto
