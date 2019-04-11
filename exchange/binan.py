@@ -56,7 +56,7 @@ class Binance():
 
         for index in range(len(pairs)):
             if pairs[index].get('symbol') == pair_symbol:
-                return pairs[index].get('baseAsset')
+                return [pairs[index].get('baseAsset'), pairs[index].get('quoteAsset')]
 
     def get_deposit_address(self, symbol):
         if (self.__is_frozen(symbol) == -1):
