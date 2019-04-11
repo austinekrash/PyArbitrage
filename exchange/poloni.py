@@ -157,7 +157,10 @@ class Poloniex():
         #da vedere poi cosa far restituire
         #per ora non serve
     
-    def is_frozen(self):
-        res = self.pol.returnCurrencies().get('ZRX')
+    def is_frozen(self, symbol):
+        res = self.pol.returnCurrencies().get(symbol)
         self.costum_print(res)
-        return res
+        if res['disabled'] == 0 and res['delisted'] == 0 and res['frozen'] == 0:
+            return 0
+        else:
+            return 1
