@@ -49,7 +49,7 @@ class Bitfinex:
                 self.costum_print(pair_symbol+" "+str(self._json[index][7]))
                 return float(self._json[index][7])
         self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
-        sys.exit(1)
+        return -1
     
     def get_deposit_address(self, symbol): #symbol NON è BTC ma bitcoin mentre altre no
         res = self._bitfinex.deposit(method=symbol.lower(), wallet_name='exchange', renew=1)
@@ -61,7 +61,7 @@ class Bitfinex:
                 return res['address']
         else:
             self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
-            sys.exit(1)
+            return -1
 
     def withdraw(self, symbol, to_address, amount, addressTag = None): #To be tested
         if addressTag is None:
@@ -69,7 +69,7 @@ class Bitfinex:
         else:
             res = self._bitfinex.withdrawal('exchange', to_address, amount, payment_id=addressTag)
         self.costum_print(res)
-        return res['status']
+        return res
 
 
     def get_balance(self, symbol): #“trading”, “deposit” or “exchange” da capire quale ci serve a noi
@@ -80,41 +80,43 @@ class Bitfinex:
                 return(item['type'], item['amount'],item['available'])
         self.costum_print(res)
         self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
-        sys.exit(1)
+        return -1
 
 
     def get_balances(self):
         res = self._bitfinex.wallet_balances()
-        self.costum_print('bella '+str(res))
+        self.costum_print(str(res))
         return res
 
 
     #SONO DIVERSI GLI ARGOMENTI DELLE LIMIT RISPETTO A BIIREX
-    def buy_limitP(self, market, quantitiy, price, rate = None):
+    def buy_currencyP(self, market, quantitiy, price, rate = None):
         res = self._bitfinex.new_offer(market, quantitiy, price, 'buy', 'fill-or-kill')
         self.costum_print(str(res))
-        return res['id']
+        return res
 
-    def sell_limitP(self, market, quantitiy,  price, rate = None):
+    def sell_currencyP(self, market, quantitiy,  price, rate = None):
         res = self._bitfinex.new_offer(market, quantitiy, price, 'sell', 'fill-or-kill')
         self.costum_print(str(res))
-        return res['id']   #check su questo
+        return res 
 
-
-    def get_open_orders(self, market): #diversa dalle altre
+    def get_open_orders(self): #diversa dalle altre
         res = self._bitfinex.active_orders()
         self.costum_print(str(res))
+        if len(res) > 1:
+            return -1
         for item in res:
-            if item['symbol'] == market:
-                return item['id']
+            return item['id']
         self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
-        sys.exit(1)
+        return -1
 
-    def cancel_order(self, market, uuid): # qui non serve market
+    def cancel_order(self, uuid): # qui non serve market
         res = self._bitfinex.cancel_order(uuid)
         self.costum_print(str(res))
-        return res['id']
+        return res
     
+######################################################################
+
     def get_withdraw_fee(self, symbol): #MAKER e TAKER NON SONO WITHDRAW FEE
         res = self._bitfinex.account_infos()
         #self.costum_print(res[0]['fees'])
@@ -126,5 +128,3 @@ class Bitfinex:
         self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
         sys.exit(1)
     
-    def __is_frozen(self, symbol): #return depositStatus, withdrawStatus
-        pass

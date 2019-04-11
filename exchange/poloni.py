@@ -50,10 +50,11 @@ class Poloniex():
                 #print("[POLONIEX] "+price+" "+symbol)
                 return float(price)
         print("---------------------------------VALUE NOT FOUND---------------------------------")
-        sys.exit(1)
+        return -1
     
     def get_deposit_address(self, symbol):
         res = self.pol.generateNewAddress(symbol)
+        self.costum_print(res)
         if res['success'] == 1:
             return res['response']
         elif res['success'] == 0:
@@ -65,24 +66,36 @@ class Poloniex():
         return self.pol.returnDepositAddresses()
     
     def get_balances(self):
-        return self.pol.returnCompleteBalances()
-        #return -1 se errore
+        res  = self.pol.returnCompleteBalances()
+        self.costum_print(res)
+        return res
 
     def get_balance(self, symbol):
-        return self.pol.returnCompleteBalances()[symbol]
-        #return tupla 
-        #return -1 se errore
+        res  = self.pol.returnCompleteBalances()[symbol]
+        self.costum_print(res)
+        return res['available'], res['onOrders']
+
         
     def get_available_account_balances(self):
-        return self.pol.returnAvailableAccountBalances()
+        res = self.pol.returnAvailableAccountBalances()
+        self.costum_print(res)
+        return res
         #return -1 se errore
 
     def get_open_orders(self):
-        return self.pol.returnOpenOrders()
-        #da testare e far restituire id
+        res = self.pol.returnOpenOrders()
+        for key, value in res.items():
+            if value:
+                self.costum_print(value)
+                return value['orderNumber']
+        self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
+        return -1
         #assumiamo che ci sia solo 1 ordine
     
     def buy_currency(self, currencyPair, amount, rate, orderType=False):
+        res = self.pol.buy(currencyPair, rate, amount, orderType=False)
+        self.costum_print(res)
+        return res
         """You may optionally set "orderType"
         to "fillOrKill", "immediateOrCancel" or "postOnly". A fill-or-kill order
         will either fill in its entirety or be completely aborted. An
@@ -92,9 +105,11 @@ class Poloniex():
         only be placed if no portion of it fills immediately; this guarantees
         you will never pay the taker fee on any part of the order that fills.
         If successful, the method will return the order number."""
-        return self.pol.buy(currencyPair, rate, amount, orderType=False)
 
     def sell_currency(self, currencyPair, rate, amount, orderType=False):
+        res = self.pol.sell(currencyPair, rate, amount, orderType=False)
+        self.costum_print(res)
+        return res
         """You may optionally set "orderType"
         to "fillOrKill", "immediateOrCancel" or "postOnly". A fill-or-kill order
         will either fill in its entirety or be completely aborted. An
@@ -104,21 +119,28 @@ class Poloniex():
         only be placed if no portion of it fills immediately; this guarantees
         you will never pay the taker fee on any part of the order that fills.
         If successful, the method will return the order number."""
-        return self.pol.sell(currencyPair, rate, amount, orderType=False)
 
     def cancel_order(self, orderNumber):
-        return self.pol.cancelOrder(orderNumber)
+        res = self.pol.cancelOrder(orderNumber)
+        self.costum_print(res)
+        return res
 
     def move_order(self, orderNumber, rate, amount=False, orderType=False):
-        return self.pol.moveOrder(orderNumber, rate, amount=False, orderType=False)
+        res = self.pol.moveOrder(orderNumber, rate, amount=False, orderType=False)
+        self.costum_print(res)
+        return res
 
     def withdraw(self, currency, address, amount, paymentId=False):
-        return self.pol.withdraw(currency, amount, address, paymentId=False)
+        res = self.pol.withdraw(currency, amount, address, paymentId=False)
+        self.costum_print(res)
+        return res
         #vedere come funziona
         #vedere errori tipo min withdraw
 
     def return_fee_info(self):
-        return self.pol.returnFeeInfo()
+        res = self.pol.returnFeeInfo()
+        self.costum_print(res)
+        return res
         #da vedere poi cosa far restituire
         #per ora non serve
 

@@ -108,8 +108,7 @@ class Bittrex:
             raise Exception('Some problems retrieving price: '+r.status_code)
         if( True is json.loads(r.content).get('success')):
             self.costum_print(res.get('result').get('Balance'))
-            return res.get('result').get('Balance')
-            #deve restituire una tupla
+            return res.get('result').get('Balance'), res.get('result').get('Available'), res.get('result').get('Pending')
         else:
             self.costum_print('some problems')
             return -1
@@ -134,7 +133,7 @@ class Bittrex:
 
 
 
-    def buy_limitR(self, market, quantitiy, rate, price = None):
+    def buy_currencyR(self, market, quantitiy, rate, price = None):
         auth = self._url_account+'buylimit?apikey='+self._apiKey+'&market='+market+'&quantity='+quantitiy+'&rate='+rate+'&nonce='+self.get_nonce()
         signature = hmac.new(self._secretKey, auth.encode('utf-8'), hashlib.sha512).hexdigest()
         headers = {'apisign': signature}
@@ -151,7 +150,7 @@ class Bittrex:
             self.costum_print(' some problems')
             return -1
 
-    def sell_limitR(self, market, quantitiy, rate, price = None):
+    def sell_currencyR(self, market, quantitiy, rate, price = None):
         auth = self._url_account+'selllimit?apikey='+self._apiKey+'&market='+market+'&quantity='+quantitiy+'&rate='+rate+'&nonce='+self.get_nonce()
         signature = hmac.new(self._secretKey, auth.encode('utf-8'), hashlib.sha512).hexdigest()
         headers = {'apisign': signature}

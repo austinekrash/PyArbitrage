@@ -80,12 +80,12 @@ class Binance():
 
 
     #SONO DIVERSI GLI ARGOMENTI DELLE LIMIT RISPETTO A BIIREX
-    def buy_limitP(self, market, quantitiy, price, rate = None):
+    def buy_currencytP(self, market, quantitiy, price, rate = None):
         res = self._client.order_limit_buy(symbol=market, quantity=quantitiy, price=price)
         self.costum_print(res)
         return res
 
-    def sell_limitP(self, market, quantitiy,  price, rate = None):
+    def sell_currencyP(self, market, quantitiy,  price, rate = None):
         res = self._client.order_limit_sell(symbol=market, quantity=quantitiy, price=price)
         self.costum_print(res)
         return res
