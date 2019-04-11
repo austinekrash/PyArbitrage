@@ -49,6 +49,15 @@ class Binance():
         self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
         return -1
 
+    def find_asset(self, pair_symbol):
+        r = requests.get("https://binance.com/api/v1/exchangeInfo")
+        datastore = json.loads(r.content)
+        pairs = datastore.get('symbols')
+
+        for index in range(len(pairs)):
+            if pairs[index].get('symbol') == pair_symbol:
+                return pairs[index].get('baseAsset')
+
     def get_deposit_address(self, symbol):
         if (self.__is_frozen(symbol) == -1):
             self.costum_print('Frozen '+symbol)
