@@ -42,6 +42,7 @@ def fetch_views_db(cur):
     records = cur.fetchall()
     for x in records:
         if 'cex' not in x:
+            print(x)
             intersectionView.append(x[0]) # faccio una lista con tutte le view contenenti le intersezioni tra exchange
     return intersectionView
 
@@ -157,6 +158,11 @@ intersectionView = fetch_views_db(cur)
 percentages = compute_percentages(intersectionView, cur)
 orderded_nop_percentages = remove_sort_duplicates(percentages)
 
+
+for perc in orderded_nop_percentages:
+    print(perc)
+    
+
 print('-----------------------------------------------------------------------------------------')
 
 for item in orderded_nop_percentages:
@@ -167,8 +173,3 @@ for item in orderded_nop_percentages:
 print('-----------------------------------------------------------------------------------------')
 
 close_db(conn, cur)
-
-for perc in orderded_nop_percentages:
-    print(perc)
-    
-
