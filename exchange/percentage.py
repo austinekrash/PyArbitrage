@@ -120,6 +120,7 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
     start = cur.fetchall()
     cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolEnd +  "' AND exchange ='" + endExchange + "'")
     end = cur.fetchall()
+    print(start)
     withdrawalFee = float(start[0][1]) #query
     depositFee = float(end[0][2])  #query
     takerStart = float(start[0][4])
