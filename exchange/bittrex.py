@@ -47,10 +47,10 @@ class Bittrex:
             raise Exception('Some problems retrieving price: '+r.status_code)
 
     def get_price_pairs(self, pair_symbol):
-        for index in range(len(self._json)):
-            if pair_symbol.lower() in self._json[index]['MarketName'].lower():
-                #self.costum_print("[BITTREX] "+self._json[index]['MarketName']+" "+str(self._json[index]['Last']))
-                return float(self._json[index]['Last'])
+        for item in self._json:
+            if pair_symbol.lower() in item['MarketName'].lower():
+                self.costum_print(item['MarketName']+" "+str(item['Last']))
+                return float(item['Last'])
         self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
         return -1
 

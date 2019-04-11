@@ -52,57 +52,16 @@ def arbitrage_fee(startExchange, endExchange, symbolStart, symbolEnd, priceStart
 
 #arbitrage_fee('bitfinex', 'binance', 'BTC', 'BTC', '1', '1', '10')
 
-
-'''
-bitfinex = Bitfinex.Factory(BITFINEXapiKey,BITFINEXsecretKey)
-bitfinex.sync()
-#bitfinex.get_price_pairs('tAGIUSD')
-#print(bitfinex.get_deposit_address('santiment')) #Oocio
-#bitfinex.withdraw()# test
-#bitfinex.get_balance('btc')  #“trading”, “deposit” or “exchange”
-bitfinex.get_withdraw_fee('btc')
-'''
-
-poloniex = Poloniex.Factory(A_POLONIEXapiKey,A_POLONIEXsecretKey)
-poloniex.sync()
-print(poloniex.get_deposit_address('XRP'))
-poloniex.get_open_orders()
-
-#print(p.return_deposit_address())
-#polo = Poloniex()
-
-
-'''
-cex = Cex.Factory()
-cex.sync()
-cex.get_price_pairs('ETH/BTC')
-
-binance = Binance.Factory(BINANCEapiKey, BINANCEsecretKey)
+binance = Binance.Factory(E_BINANCEapiKey, E_BINANCEsecretKey)
+bitfinex = Bitfinex.Factory(A_BITFINEXapiKey, A_BITFINEXsecretKey)
+bittrex = Bittrex.Factory(E_BITTREXapiKey,E_BITTREXsecretKey)
+poloniex = Poloniex.Factory(A_POLONIEXapiKey, A_POLONIEXsecretKey)
 binance.sync()
-binance.get_deposit_address('PAX')
-binance.get_balance('XRP')
-binance.get_balances()
-print(binance.is_frozen('BTC'))
-
-bitfinex = Bitfinex.Factory()
-bitfinex.sync()
-bitfinex.get_price_pairs('ETHBTC')
-
-bittrex = Bittrex.Factory()
 bittrex.sync()
-#bittrex.get_price_pairs('BTC-GRIN')
-bittrex.get_deposit_address('BTC')
-#bittrex.get_balances()
-#bittrex.get_open_orders('BTC-GRIN')
-bittrex = Bittrex.Factory()
-bittrex.sync()
-bittrex.get_price_pairs('BTC-GRIN')
-bittrex.getDepositAddress('test')
-
-bitfinex = Bitfinex().Factory()
-bitfinex.get_address('BTC')
-
-poloniex = Poloniex.Factory()
 poloniex.sync()
+bitfinex.sync()
+
+bittrex.get_price_pairs('BTC-POWR')
+binance.get_price_pairs('POWRBTC')
 poloniex.get_price_pairs('BTC_BCN')
-'''
+bitfinex.get_price_pairs('tABSETH')

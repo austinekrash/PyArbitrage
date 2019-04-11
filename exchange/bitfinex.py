@@ -44,10 +44,10 @@ class Bitfinex:
             raise Exception('Some problems retrieving price: '+r.status_code)
 
     def get_price_pairs(self, pair_symbol):
-        for index in range(len(self._json)):
-            if pair_symbol.lower() in self._json[index][0].lower():
-                self.costum_print(pair_symbol+" "+str(self._json[index][7]))
-                return float(self._json[index][7])
+        for item in self._json:
+            if pair_symbol.lower() in item[0].lower():
+                self.costum_print(pair_symbol+" "+str(item[7]))
+                return float(item[7])
         self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
         return -1
     

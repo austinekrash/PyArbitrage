@@ -57,8 +57,8 @@ def initialize_exchanges():
     poloniex = Poloniex.Factory(A_POLONIEXapiKey, A_POLONIEXsecretKey)
     cex = Cex.Factory() # Sarà da togliere
     binance.sync()
-    bittrex.sync()
     bitfinex.sync()
+    bittrex.sync()
     poloniex.sync()
     cex.sync()
     return binance, bitfinex, bittrex, poloniex, cex
