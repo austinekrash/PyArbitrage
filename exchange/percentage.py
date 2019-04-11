@@ -113,13 +113,24 @@ def is_advantages(startAmount, endAmount):
 
 def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, priceEnd, setAmount, percentage, conn, cur):
     symbolStart = eval(startExchange).find_asset(pairStart)[0]
-    print(symbolStart)
     symbolEnd = eval(endExchange).find_asset(pairEnd)[0]
-    print(symbolEnd)
+    if symbolStart != symbolEnd:
+        print(symbolStart)
+        print(symbolEnd)
+        sys.exit(1)
     cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolStart +  "' AND exchange ='" + startExchange + "'")
     start = cur.fetchall()
+    if start is None:
+        cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolStart +  "' AND exchange ='" + endExchange + "'")
+        start = cur.fetchall()
     cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolEnd +  "' AND exchange ='" + endExchange + "'")
     end = cur.fetchall()
+    if end is None:
+        cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolEnd +  "' AND exchange ='" + startExchange + "'")
+        end = cur.fetchall()
+    if start is None and end is None:
+        print('both start and end are None!!')
+        sys.exit(1)
     print(start)
     print(end)
     withdrawalFee = float(start[0][1]) #query
