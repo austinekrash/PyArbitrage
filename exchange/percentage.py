@@ -130,7 +130,7 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
         end = cur.fetchall()
     if not start and not end:
         print('both start and end are None!!')
-        sys.exit(1)
+        return -1
     print(start)
     print(end)
     withdrawalFee = float(start[0][1]) #query
@@ -146,7 +146,7 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
         percentage_fee = (endAmount - startAmount) / startAmount*100
         return {"startAmount": startAmount, "endAmount": endAmount, "percentage": percentage, "percentage_fee": percentage_fee ,"startExchange": startExchange, "startSymbol": pairStart, "startPrice": priceStart, "endExchange": endExchange, "endSymbol": pairEnd, "endPrice": priceEnd}
     else:
-        -1
+        return -1
 
 ###########################################################################
     
