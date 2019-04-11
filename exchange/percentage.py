@@ -41,7 +41,7 @@ def fetch_views_db(cur):
     cur.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'VIEW'")
     records = cur.fetchall()
     for x in records:
-        if 'cex' not in x:
+        if 'cex' not in str(x[0]):
             print(x)
             intersectionView.append(x[0]) # faccio una lista con tutte le view contenenti le intersezioni tra exchange
     return intersectionView
