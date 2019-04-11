@@ -156,4 +156,8 @@ class Poloniex():
         return res
         #da vedere poi cosa far restituire
         #per ora non serve
-
+    
+    def is_frozen(self):
+        res = self.pol.returnCurrencies().get('ZRX')
+        self.costum_print(res)
+        return res
