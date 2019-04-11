@@ -46,6 +46,17 @@ class Bittrex:
         except (r.status_code != 200):
             raise Exception('Some problems retrieving price: '+r.status_code)
 
+    def find_asset(self, symbol):
+    #return base and quote asset
+        if(symbol[:4].lower()  == 'usdt'):
+            return [symbol[5:], 'usdt']
+        elif(symbol[:3].lower()  == 'btc'):
+            return [symbol[4:], 'btc']
+        elif(symbol[:3].lower()  == 'eth'):
+            return [symbol[4:], 'eth']
+        elif(symbol[:3].lower()  == 'usd'):
+            return [symbol[4:], 'usd']
+
     def get_price_pairs(self, pair_symbol):
         for index in range(len(self._json)):
             if pair_symbol.lower() in self._json[index]['MarketName'].lower():

@@ -41,6 +41,19 @@ class Poloniex():
             self._json = json.loads(r.content)
         except (r.status_code != 200):
             raise Exception('Some problems retrieving price: '+r.status_code)  
+    
+    def find_asset(self, symbol):
+    #return base and quote asset
+        if(symbol[:4].lower()  == 'usdt'):
+            return [symbol[5:], 'usdt']
+        elif(symbol[:3].lower()  == 'btc'):
+            return [symbol[4:], 'btc']
+        elif(symbol[:3].lower()  == 'eth'):
+            return [symbol[4:], 'eth']
+        elif(symbol[:3].lower()  == 'xmr'):
+            return [symbol[4:], 'xmr']
+        elif(symbol[:4].lower()  == 'usdc'):
+            return [symbol[5:], 'usdc']
 
     def get_price_pairs(self, pair_symbol):
         for key, value in self._json.items():
