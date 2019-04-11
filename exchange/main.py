@@ -90,7 +90,7 @@ cex.sync()
 poloniex = Poloniex.Factory(A_POLONIEXapiKey,A_POLONIEXsecretKey)
 poloniex.sync()
 
-poloniex.is_frozen()
+poloniex.is_frozen('ZRX')
 
 #print(arbitrage_fee('poloniex', 'bitfinex', 'BTC_REP', 'tREPBTC', 0.00350197, 0.0035394, 100, 13))
 #print(poloniex.get_deposit_address('XRP'))
