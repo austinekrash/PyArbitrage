@@ -66,10 +66,9 @@ def initialize_exchanges():
 def compute_percentages(intersectionView, cur):
     percentages = []
     #per ogni exchange prendo la lista delle crypto
-    i = 0
+    ocio = []
     for view in intersectionView:
-        i = i +1
-        print(i)
+        ocio.append(view)
         cur.execute("SELECT * FROM "+view)
         cryptoIntersection = []
         for x in cur.fetchall():#prendo tutte le tuple per ogni view
@@ -79,6 +78,7 @@ def compute_percentages(intersectionView, cur):
             #chiamo api prezzo su symbol
             #inserisco in percentages la coppia o tripla symbol std_symbol percentuale
             #non ha senso prendere anche il prezzo, perchè il prezzo va preso subito prima della vednita/Acquisto
+    print(ocio)
     return percentages
 
 def __percentage(cryptoIntersection):
