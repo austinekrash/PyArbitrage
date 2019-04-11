@@ -72,7 +72,7 @@ def close_db(conn, cur):
 
 
 def main():
-    id_crypto = 1087
+    id_crypto = 1160
     options = Options()  #Needed since no display
     options.headless = True
     conn, cur = connect_db()
