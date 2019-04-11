@@ -61,8 +61,8 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
     #symbol2 = cur.fetchall()
     #price1 = eval(startExchange).get_price_pairs(symbol1)
     #price2 = eval(endExchange).get_price_pairs(symbol2)
-    startBtcAmount = priceStart*setAmount
-    endBtcAmount = priceEnd*sellCurr
+    startBtcAmount = float(priceStart)*setAmount
+    endBtcAmount = float(priceEnd)*sellCurr
     if is_advantages(startBtcAmount, endBtcAmount):
         #return (startExchange, endExchange, pairStart, pairEnd, priceStart, priceEnd)
         return {"startBtcAmount": startBtcAmount, "endBtcAmount": endBtcAmount, "percentage": percentage ,"startExchange": startExchange, "startSymbol": pairStart, "startPrice": priceStart, "endExchange": endExchange, "endSymbol": pairEnd, "endPrice": priceEnd}
