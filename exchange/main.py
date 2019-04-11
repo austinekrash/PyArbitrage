@@ -90,7 +90,7 @@ cex.sync()
 poloniex = Poloniex.Factory(A_POLONIEXapiKey,A_POLONIEXsecretKey)
 poloniex.sync()
 
-print(arbitrage_fee('binance', 'bittrex', 'LTCBTC', 'BTC-LTC', 0.015533, 0.01754890, 100, 13))
+print(arbitrage_fee('poloniex', 'bitfinex', 'BTC_REP', 'tREPBTC', 0.00350197, 0.0035394, 100, 13))
 #print(poloniex.get_deposit_address('XRP'))
 #poloniex.get_open_orders()
 
