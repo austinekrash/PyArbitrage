@@ -53,7 +53,7 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
     takerEnd = end[0][4]  #query
     startWithdrawal = setAmount - (setAmount * takerStart/100) - withdrawalFee
     endWithdrawal = startWithdrawal - depositFee
-    sellCurr = endWithdrawal - endWithdrawal * takerEnd /100
+    sellCurr = float(endWithdrawal - endWithdrawal * takerEnd /100)
 
     #cur.execute("SELECT symbol FROM " + startExchange +" WHERE base_asset = '" + symbolStart +  "' AND quote_asset = 'BTC' AND exchange_name ='" + startExchange + "'")
     #symbol1 = cur.fetchall()
@@ -61,7 +61,7 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
     #symbol2 = cur.fetchall()
     #price1 = eval(startExchange).get_price_pairs(symbol1)
     #price2 = eval(endExchange).get_price_pairs(symbol2)
-    startBtcAmount = float(priceStart)*setAmount
+    startBtcAmount = float(priceStart)*float(setAmount)
     endBtcAmount = float(priceEnd)*sellCurr
     if is_advantages(startBtcAmount, endBtcAmount):
         #return (startExchange, endExchange, pairStart, pairEnd, priceStart, priceEnd)
