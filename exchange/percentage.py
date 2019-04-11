@@ -143,7 +143,7 @@ orderded_nop_percentages = remove_sort_duplicates(percentages)
 print('-----------------------------------------------------------------------------------------')
 
 for item in orderded_nop_percentages:
-    print(item['startExchange']+" "+item['endExchange']+" "+item['startSymbol']+" "+item['endSymbol']+" "+item['startPrice']+" "+item['endPrice']+" "+str(100)+" "+item['percentage'])
+    print(item['startExchange']+" "+item['endExchange']+" "+item['startSymbol']+" "+item['endSymbol']+" "+str(item['startPrice'])+" "+str(item['endPrice'])+" "+str(100)+" "+str(item['percentage']))
 
     #print(arbitrage_fee(item['startExchange'], item['endExchange'], item['startSymbol'], item['endSymbol'], item['startPrice'], item['endPrice'], 100, item['percentage'], conn, cur))
 
