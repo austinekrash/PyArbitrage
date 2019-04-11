@@ -39,11 +39,12 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
 
     symbolStart = eval(startExchange).find_asset(pairStart)
     symbolEnd = eval(endExchange).find_asset(pairEnd)
-    
+    print(type(symbolStart))
+    print(symbolStart)
     cur = conn.cursor()
-    cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee  WHERE symbol = '" + symbolStart +  "' AND exchange ='" + startExchange + "'")
+    cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolStart +  "' AND exchange ='" + startExchange + "'")
     start = cur.fetchall()
-    cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee  WHERE symbol = '" + symbolEnd +  "' AND exchange ='" + endExchange +"'")
+    cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolEnd +  "' AND exchange ='" + endExchange +"'")
     end = cur.fetchall()
     print(start)
     withdrawalFee = start[0][1] #query
