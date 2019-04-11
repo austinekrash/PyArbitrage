@@ -44,12 +44,12 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
     start = cur.fetchall()
     cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolEnd +  "' AND exchange ='" + endExchange + "'")
     end = cur.fetchall()
-    withdrawalFee = start[0][1] #query
-    depositFee = end[0][2]  #query
-    takerStart = start[0][4]
-    takerEnd = end[0][4]  #query
-    startWithdrawal = setAmount - (setAmount * takerStart/100) - withdrawalFee
-    endWithdrawal = startWithdrawal - depositFee
+    withdrawalFee = float(start[0][1]) #query
+    depositFee = float(end[0][2])  #query
+    takerStart = float(start[0][4])
+    takerEnd = float(end[0][4])  #query
+    startWithdrawal = float(setAmount - (setAmount * takerStart/100) - withdrawalFee)
+    endWithdrawal = float(startWithdrawal - depositFee)
     sellCurr = float(endWithdrawal - endWithdrawal * takerEnd /100)
 
     #cur.execute("SELECT symbol FROM " + startExchange +" WHERE base_asset = '" + symbolStart +  "' AND quote_asset = 'BTC' AND exchange_name ='" + startExchange + "'")
