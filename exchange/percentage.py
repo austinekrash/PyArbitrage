@@ -103,7 +103,7 @@ def remove_sort_duplicates(percentages):
         if t not in seen:
             seen.add(t)
             no_dup_list.append(d)
-    return sorted(no_dup_list, key=lambda k: k['percentage']) 
+    return sorted(no_dup_list, key=lambda k: k['percentage'], reverse=True) 
 
 ############################## FEE ########################################
 
@@ -119,7 +119,8 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
     if symbolStart != symbolEnd:
         print(symbolStart)
         print(symbolEnd)
-        sys.exit(1)
+        print("NOT EQUALS")
+        return -1
     cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolStart +  "' AND exchange ='" + startExchange + "'")
     start = cur.fetchall()
     if not start:
