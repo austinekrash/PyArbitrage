@@ -86,8 +86,8 @@ def __percentage(cryptoIntersection):
     baseAsset = cryptoIntersection[2]
     print(exchange1+" "+symbol1)
     print(exchange2+" "+symbol2)
-    price1 = eval(exchange1).get_price_pairs(symbol1)
-    price2 = eval(exchange2).get_price_pairs(symbol2)
+    price1 = eval(exchange1).get_price_pairs(pair_symbol=symbol1)
+    price2 = eval(exchange2).get_price_pairs(pair_symbol=symbol2)
     if(price1 >= price2):
         percentages = (price1 - price2) / price2 * 100
         return {"percentage": percentages ,"startExchange": exchange2, "startSymbol": symbol2, "startPrice": price2, "endExchange": exchange1, "endSymbol": symbol1, "endPrice": price1}
