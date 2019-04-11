@@ -1,13 +1,84 @@
-import psycopg2
-import requests
+import sys
 import json
+import requests
+import psycopg2
 from binan import Binance
 from bitfinex import Bitfinex
 from bittrex import Bittrex
 from cex import Cex
-from poloniex import Poloniex
+from poloni import Poloniex
 
-def percentage(cryptoIntersection):
+E_BINANCEapiKey = 'WXYox2eh9V8fUiLvjdW9f8xkh3q30EpzxGaeLQvxMZ0TTUyDSaIJliEmAXr2NtYN'
+E_BINANCEsecretKey = 'qbXdJU82w1QKpjHe6OFRMdJMxbZgQuHigLRzssDqf3TCpEaxyAaHyrGolDQzbrbD'
+
+E_BITTREXapiKey = 'd94bf4036b9841729f2d5100ee9132a4'
+E_BITTREXsecretKey = '672e4f9fea3b4628b1bf5617fbdb22be'
+
+E_POLONIEXapiKey = '8QF9DS6A-YJWQQLWW-ZKUM8YV8-YJ5HG70E'
+E_POLONIEXsecretKey = '6dd1afa15f71fe6c77bb0fd9348058f9d45deb99d0e9c5aed2752f974919f5b381db5f5e458c558e720805a1d840f56064253cce64a4c84fc0b05ad8f51d8ecc'
+
+#Api ale
+A_POLONIEXapiKey = '74DRDEIV-2G9W6KXO-QK6FY8Z9-LP1CAT98'
+A_POLONIEXsecretKey = '16962e88b0e3349e2f774d6eb5dd5bde54a59bcd120c637e0e2cca5dbb0f77d93379416ab4e6dbc4fe9116007a548913b1f7815fb306484e14fc4df6c3c23486'
+
+A_BITFINEXapiKey = 'SxBHFSegUgIjDXCKCJSbGRPAxmGdgNCVFRStoVkLaaD'
+A_BITFINEXsecretKey = '7Ud65qmtjg1lFA4j1u8e5tu3CeU4bL2V4Ni79an6B0P'
+
+def costum_print(text):
+        print('[PERCENTAGE] '+str(text))   
+
+def open_db():
+    try:
+        conn = psycopg2.connect("dbname='arbitraggio' user='ale' host='localhost' password='pippo'")
+    except:
+        costum_print("I am unable to connect to the database")
+        sys.exit(1)
+    return conn, cur
+
+def fetch_views_db(cur):
+    intersectionView = []
+    cur = conn.cursor()
+    cur.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'VIEW'")
+    records = cur.fetchall()
+    for x in records:
+        intersectionView.append(x[0]) # faccio una lista con tutte le view contenenti le intersezioni tra exchange
+    return intersectionView
+
+def close_db(conn, cur):
+    conn.close()
+    cur.close()
+    costum_print("I am unable to connect to the database")
+
+
+def initialize_exchanges():
+    binance = Binance.Factory(E_BINANCEapiKey, E_BINANCEsecretKey)
+    bitfinex = Bitfinex.Factory(A_BITFINEXapiKey, A_BITFINEXsecretKey)
+    bittrex = Bittrex.Factory(E_BITTREXapiKey,E_BITTREXsecretKey)
+    poloniex = Poloniex.Factory(A_POLONIEXapiKey, A_POLONIEXsecretKey)
+    cex = Cex.Factory() # Sarà da togliere
+    binance.sync()
+    bittrex.sync()
+    bitfinex.sync()
+    poloniex.sync()
+    cex.sync()
+    return binance, bitfinex, bittrex, poloniex, cex
+
+def compute_percentages(intersectionView, cur):
+    percentages = []
+    #per ogni exchange prendo la lista delle crypto
+    for view in intersectionView:
+        cur.execute("SELECT * FROM "+view)
+        cryptoIntersection = []
+        for x in cur.fetchall():#prendo tutte le tuple per ogni view
+            cryptoIntersection.append(x)
+            for i in cryptoIntersection:
+                percentages.append(__percentage(i))            
+            #chiamo api prezzo su symbol
+            #inserisco in percentages la coppia o tripla symbol std_symbol percentuale
+            #non ha senso prendere anche il prezzo, perchè il prezzo va preso subito prima della vednita/Acquisto
+    return percentages
+
+def __percentage(cryptoIntersection):
     exchange1 = (cryptoIntersection[3])[0].upper() + (cryptoIntersection[3])[1:]
     exchange2 = (cryptoIntersection[4])[0].upper() + (cryptoIntersection[4])[1:]
     symbol1 = cryptoIntersection[0]
@@ -16,62 +87,31 @@ def percentage(cryptoIntersection):
     price1 = eval(exchange1).get_price_pairs(symbol1)
     price2 = eval(exchange2).get_price_pairs(symbol2)
     if(price1 >= price2):
-        perc = (price1 - price2) / price2 * 100
-        return {"percentage": perc ,"startExchange": exchange2, "startSymbol": symbol2, "startPrice": price2, "endExchange": exchange1, "endSymbol": symbol1, "endPrice": price1}
+        percentages = (price1 - price2) / price2 * 100
+        return {"percentage": percentages ,"startExchange": exchange2, "startSymbol": symbol2, "startPrice": price2, "endExchange": exchange1, "endSymbol": symbol1, "endPrice": price1}
     else:
-        perc = (price2 - price1) / price1 * 100
-        return {"percentage": perc ,"startExchange": exchange1, "startSymbol": symbol1, "startPrice": price1, "endExchange": exchange2, "endSymbol": symbol2, "endPrice": price2}
+        percentages = (price2 - price1) / price1 * 100
+        return {"percentage": percentages ,"startExchange": exchange1, "startSymbol": symbol1, "startPrice": price1, "endExchange": exchange2, "endSymbol": symbol2, "endPrice": price2}
     #return tupla con percentuale, exchange di partenza, exchange di destinazione
 
+def remove_sort_duplicates(percentages):
+    seen = set()
+    no_dup_list = []
+    for d in percentages:
+        t = tuple(d.items())
+        if t not in seen:
+            seen.add(t)
+            no_dup_list.append(d)
+    return sorted(no_dup_list, key=lambda k: k['percentage']) 
+    
 
-intersectionView = []
-perc = []
-Binance = Binance().Factory()
-Binance.sync()
-Bittrex = Bittrex().Factory()
-Bittrex.sync()
-Bitfinex = Bitfinex().Factory()
-Bitfinex.sync()
-Cex = Cex().Factory()
-Cex.sync()
-Poloniex = Poloniex().Factory()
-Poloniex.sync()
+binance, bitfinex, bittrex, poloniex, cex = initialize_exchanges()
+conn, cur = open_db()
+intersectionView = fetch_views_db(cur)
+percentages = compute_percentages(intersectionView, cur)
+orderded_nop_percentages = remove_sort_duplicates(percentages)
 
-try:
-    conn = psycopg2.connect("dbname='arbitraggio' user='ale' host='localhost' password='pippo'")
-except:
-    print("I am unable to connect to the database")
+for perc in orderded_nop_percentages:
+        print(perc)
 
-cur = conn.cursor()
-
-cur.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'VIEW'")
-records = cur.fetchall()
-
-for x in records:
-    intersectionView.append(x[0]) #faccio una lista con tutte le view contenenti le intersezioni tra exchange
-
-#per ogni exchange prendo la lista delle crypto
-for view in intersectionView:
-    cur.execute("SELECT * FROM "+view)
-    cryptoIntersection = []
-    symbol = []
-    for x in cur.fetchall():#prendo tutte le tuple per ogni view
-        cryptoIntersection.append(x)
-        for i in cryptoIntersection:
-            
-            perc.append(percentage(i))            
-            #chiamo api prezzo su symbol
-            #inserisco in perc la coppia o tripla symbol std_symbol percentuale
-            #non ha senso prendere anche il prezzo, perchè il prezzo va preso subito prima della vednita/Acquisto
-orderedList = sorted(perc, key=lambda k: k['percentage']) 
-
-seen = set()
-new_l = []
-for d in orderedList:
-    t = tuple(d.items())
-    if t not in seen:
-        seen.add(t)
-        new_l.append(d)
-
-for i in new_l:
-    print(i)
+close_db(conn, cur)
