@@ -38,9 +38,9 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
         print("I am unable to connect to the database")
 
     symbolStart = eval(startExchange).find_asset(pairStart)
-    symbolEnd = eval(endExchange).find_asset(pairEnd)
-    print(type(symbolStart))
-    print(symbolStart)
+    symbolEnd = eval(endExchange).find_asset(pairEnd)(0)
+    print(type(symbolEnd))
+    print(symbolEnd)
     cur = conn.cursor()
     cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolStart +  "' AND exchange ='" + startExchange + "'")
     start = cur.fetchall()
