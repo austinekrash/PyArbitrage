@@ -63,7 +63,7 @@ def initialize_exchanges():
     cex.sync()
     return binance, bitfinex, bittrex, poloniex, cex
 
-def compute_percentages(intersectionView, cur):
+def compute_percentages(intersectionView, cur, exchanges):
     percentages = []
     #per ogni exchange prendo la lista delle crypto
     for view in intersectionView:
@@ -72,13 +72,13 @@ def compute_percentages(intersectionView, cur):
         for x in cur.fetchall():#prendo tutte le tuple per ogni view
             cryptoIntersection.append(x)
             for i in cryptoIntersection:
-                percentages.append(__percentage(i))            
+                percentages.append(__percentage(i), exchanges)            
             #chiamo api prezzo su symbol
             #inserisco in percentages la coppia o tripla symbol std_symbol percentuale
             #non ha senso prendere anche il prezzo, perchè il prezzo va preso subito prima della vednita/Acquisto
     return percentages
 
-def __percentage(cryptoIntersection):
+def __percentage(cryptoIntersection, exchanges):
     exchange1 = (cryptoIntersection[3])
     exchange2 = (cryptoIntersection[4])
     symbol1 = cryptoIntersection[0]
@@ -107,10 +107,10 @@ def remove_sort_duplicates(percentages):
     return sorted(no_dup_list, key=lambda k: k['percentage']) 
     
 def main():
-    binance, bitfinex, bittrex, poloniex, cex = initialize_exchanges()
+    exchanges = (binance, bitfinex, bittrex, poloniex, cex) = initialize_exchanges()
     conn, cur = open_db()
     intersectionView = fetch_views_db(cur)
-    percentages = compute_percentages(intersectionView, cur)
+    percentages = compute_percentages(intersectionView, cur, exchanges)
     orderded_nop_percentages = remove_sort_duplicates(percentages)
 
     for perc in orderded_nop_percentages:
