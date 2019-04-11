@@ -79,8 +79,8 @@ def compute_percentages(intersectionView, cur):
     return percentages
 
 def __percentage(cryptoIntersection):
-    exchange1 = (cryptoIntersection[3])
-    exchange2 = (cryptoIntersection[4])
+    exchange1 = (cryptoIntersection[3]).lower()
+    exchange2 = (cryptoIntersection[4]).lower()  #lower() in modo che coincidano con i nomi delle variabili degli exchange definite in initialize_exchange()
     symbol1 = cryptoIntersection[0]
     symbol2 = cryptoIntersection[1]
     baseAsset = cryptoIntersection[2]
