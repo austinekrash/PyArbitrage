@@ -104,14 +104,16 @@ def remove_sort_duplicates(percentages):
             no_dup_list.append(d)
     return sorted(no_dup_list, key=lambda k: k['percentage']) 
     
+def main():
+    binance, bitfinex, bittrex, poloniex, cex = initialize_exchanges()
+    conn, cur = open_db()
+    intersectionView = fetch_views_db(cur)
+    percentages = compute_percentages(intersectionView, cur)
+    orderded_nop_percentages = remove_sort_duplicates(percentages)
 
-binance, bitfinex, bittrex, poloniex, cex = initialize_exchanges()
-conn, cur = open_db()
-intersectionView = fetch_views_db(cur)
-percentages = compute_percentages(intersectionView, cur)
-orderded_nop_percentages = remove_sort_duplicates(percentages)
+    for perc in orderded_nop_percentages:
+            print(perc)
 
-for perc in orderded_nop_percentages:
-        print(perc)
+    close_db(conn, cur)
 
-close_db(conn, cur)
+main()
