@@ -57,8 +57,8 @@ def initialize_exchanges():
     poloniex = Poloniex.Factory(A_POLONIEXapiKey, A_POLONIEXsecretKey)
     cex = Cex.Factory() # Sarà da togliere
     binance.sync()
-    bittrex.sync()
     bitfinex.sync()
+    bittrex.sync()
     poloniex.sync()
     cex.sync()
     return binance, bitfinex, bittrex, poloniex, cex
@@ -79,8 +79,8 @@ def compute_percentages(intersectionView, cur):
     return percentages
 
 def __percentage(cryptoIntersection):
-    exchange1 = (cryptoIntersection[3])[0].upper() + (cryptoIntersection[3])[1:]
-    exchange2 = (cryptoIntersection[4])[0].upper() + (cryptoIntersection[4])[1:]
+    exchange1 = (cryptoIntersection[3])
+    exchange2 = (cryptoIntersection[4])
     symbol1 = cryptoIntersection[0]
     symbol2 = cryptoIntersection[1]
     baseAsset = cryptoIntersection[2]
@@ -106,16 +106,13 @@ def remove_sort_duplicates(percentages):
             no_dup_list.append(d)
     return sorted(no_dup_list, key=lambda k: k['percentage']) 
     
-def main():
-    binance, bitfinex, bittrex, poloniex, cex = initialize_exchanges()
-    conn, cur = open_db()
-    intersectionView = fetch_views_db(cur)
-    percentages = compute_percentages(intersectionView, cur)
-    orderded_nop_percentages = remove_sort_duplicates(percentages)
+binance, bitfinex, bittrex, poloniex, cex = initialize_exchanges()
+conn, cur = open_db()
+intersectionView = fetch_views_db(cur)
+percentages = compute_percentages(intersectionView, cur)
+orderded_nop_percentages = remove_sort_duplicates(percentages)
 
-    for perc in orderded_nop_percentages:
-            print(perc)
+for perc in orderded_nop_percentages:
+    print(perc)
+close_db(conn, cur)
 
-    close_db(conn, cur)
-
-main()

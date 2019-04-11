@@ -60,7 +60,7 @@ class Poloniex():
             if(pair_symbol.lower() == key.lower()):
                 symbol = key
                 price = value['last']
-                #print("[POLONIEX] "+price+" "+symbol)
+                self.costum_print(symbol+" "+str(price))
                 return float(price)
         print("---------------------------------VALUE NOT FOUND---------------------------------")
         return -1
