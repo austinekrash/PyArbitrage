@@ -5,7 +5,29 @@ import hmac
 import hashlib
 import sys
 from binance.client import Client
+'''
+BITFINEX 
+Maker  0.100%
+Taker 0.200%
+https://api.bitfinex.com/v1/account_infos maker taker
+https://api.bitfinex.com/v1/account_fees withdraw
+https://www.bitfinex.com/fees
 
+#Poloniex
+Maker 0.08% 
+Taker 0.20%
+https://docs.poloniex.com/#returnchartdata
+
+
+#BINANCE
+Maker 0.1000%
+Taker 0.1000%
+Deposit FREE
+address = client.get_withdraw_fee(asset='BTC')
+
+BIITREX
+
+'''
 class Binance():
 
     __instance = None
