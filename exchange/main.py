@@ -39,14 +39,11 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
 
     symbolStart = eval(startExchange).find_asset(pairStart)
     symbolEnd = eval(endExchange).find_asset(pairEnd)[0]
-    print(type(symbolEnd))
-    print(symbolEnd)
     cur = conn.cursor()
     cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolStart +  "' AND exchange ='" + startExchange + "'")
     start = cur.fetchall()
     cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolEnd +  "' AND exchange ='" + endExchange + "'")
     end = cur.fetchall()
-    print(start)
     withdrawalFee = start[0][1] #query
     depositFee = end[0][2]  #query
     takerStart = start[0][4]
@@ -92,7 +89,7 @@ cex.sync()
 poloniex = Poloniex.Factory(A_POLONIEXapiKey,A_POLONIEXsecretKey)
 poloniex.sync()
 
-arbitrage_fee('binance', 'bittrex', 'LTCBTC', 'BTC-LTC', 0.015533, 0.01754890, 100, 13)
+print(arbitrage_fee('binance', 'bittrex', 'LTCBTC', 'BTC-LTC', 0.015533, 0.01754890, 100, 13))
 #print(poloniex.get_deposit_address('XRP'))
 #poloniex.get_open_orders()
 
