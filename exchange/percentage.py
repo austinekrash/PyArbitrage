@@ -142,11 +142,17 @@ percentages = compute_percentages(intersectionView, cur)
 orderded_nop_percentages = remove_sort_duplicates(percentages)
 
 print('-----------------------------------------------------------------------------------------')
-print(arbitrage_fee('binance', 'bittrex', 'LTCBTC', 'BTC-LTC', 0.015533, 0.01754890, 100, 13, conn, cur))
+
+for item in orderded_nop_percentages:
+    print(item['startExchange']+" "+item['endExchange']+" "+item['startSymbol']+" "+item['endSymbol']+" "+str(item['startPrice'])+" "+str(item['endPrice'])+" "+str(100)+" "+str(item['percentage']))
+    print(arbitrage_fee(item['startExchange'], item['endExchange'], item['startSymbol'], item['endSymbol'], float(item['startPrice']), float(item['endPrice']), 100, float(item['percentage']), conn, cur))
 
 
 print('-----------------------------------------------------------------------------------------')
 
 close_db(conn, cur)
 
+for perc in orderded_nop_percentages:
+    print(perc)
+    
 
