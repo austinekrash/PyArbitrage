@@ -26,16 +26,8 @@ binance = Binance.Factory(E_BINANCEapiKey, E_BINANCEsecretKey)
 bitfinex = Bitfinex.Factory(A_BITFINEXapiKey, A_BITFINEXsecretKey)
 bittrex = Bittrex.Factory(E_BITTREXapiKey,E_BITTREXsecretKey)
 poloniex = Poloniex.Factory(A_POLONIEXapiKey, A_POLONIEXsecretKey)
-max = [None, 0]
 
-cex = Cex.Factory() # Sarà da togliere
-binance.sync()
-bitfinex.sync()
-bittrex.sync()
-poloniex.sync()
-cex.sync()
 
-bittrex.get_balances()
 
 
 

@@ -165,15 +165,24 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
         max = [None, 0]
         #binance
         for index in range(len(balBin)):
-            if float(bal[index].get('free')) >= max[1]:
-                max[1] = float(bal[index].get('free'))
-                max[0] = bal[index].get('asset')
+            if float(balBin[index].get('free')) >= max[1]:
+                max[1] = float(balBin[index].get('free'))
+                max[0] = balBin[index].get('asset')
         
         balPolo = poloniex.get_available_account_balances()
         for key, value in balPolo['exchange'].items():
             if value >= max[1]:
                 max[1] = value
                 max[0] = key
+        
+        balBit = bittrex.get_balances()
+        if balBit['success'] == 'true':
+            for i in range(len(balBit['result'])):
+                if balBit['result']['Balance'] >= max[1]:
+                    max[1] = balBit['result']['Balance']
+                    max[0] = balBit['result']['Currency']
+        
+        return max
         
 
 
