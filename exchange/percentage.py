@@ -114,6 +114,8 @@ def is_advantages(startAmount, endAmount):
         return True
 
 def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, priceEnd, setAmount, percentage, conn, cur):
+    print(pairStart)
+    print(pairEnd)
     symbolStart = eval(startExchange).find_asset(pairStart)[0]
     symbolEnd = eval(endExchange).find_asset(pairEnd)[0]
     if symbolStart != symbolEnd:

@@ -69,6 +69,7 @@ class Binance():
             raise Exception('Some problems retrieving price: '+r.status_code)
     
     def get_price_pairs(self, pair_symbol):
+        print(pair_symbol)
         for item in self._json:
             if pair_symbol.lower() in item['symbol'].lower():
                 self.costum_print(item['symbol']+" "+str(item['price']))
@@ -78,7 +79,6 @@ class Binance():
 
     def find_asset(self, pair_symbol):
         pairs = self._fee.get('symbols')
-        print(pairs)
         for index in range(len(pairs)):
             if pairs[index].get('symbol') == pair_symbol:
                 print("-------------------------------------------------------- "+pairs[index].get('baseAsset'), pairs[index].get('quoteAsset'))
