@@ -80,6 +80,7 @@ class Binance():
         pairs = self._fee.get('symbols')
         for index in range(len(pairs)):
             if pairs[index].get('symbol') == pair_symbol:
+                print("-------------------------------------------------------- "+pairs[index].get('symbol'))
                 return [pairs[index].get('baseAsset'), pairs[index].get('quoteAsset')]
 
     def get_deposit_address(self, symbol):
