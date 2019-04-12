@@ -145,7 +145,7 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
     sellCurr = float(endWithdrawal - endWithdrawal * takerEnd /100)
     startAmount = float(priceStart)*float(setAmount)
     endAmount = float(priceEnd)*sellCurr
-    if is_advantages(startAmount, endAmount) and eval(startExchange).__is_frozen() and eval(endExchange).__is_frozen():
+    if is_advantages(startAmount, endAmount) and eval(startExchange).__is_frozen(symbolStart) and eval(endExchange).__is_frozen(symbolEnd):
         percentage_fee = (endAmount - startAmount) / startAmount*100
         return {"startAmount": startAmount, "endAmount": endAmount, "percentage": percentage, "percentage_fee": percentage_fee ,"startExchange": startExchange, "startSymbol": pairStart, "startPrice": priceStart, "endExchange": endExchange, "endSymbol": pairEnd, "endPrice": priceEnd}
     else:
