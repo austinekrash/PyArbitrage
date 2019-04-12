@@ -208,7 +208,7 @@ for item in orderded_nop_percentages:
     if res == -1:
         i = i +1
     if  not isinstance(res , int):
-        fee_list.append(res)
+        print(res)
 
 print('-----------------------------------------------------------------------------------------')
 print('------------------------------ '+str(i)+" len"+str(len(orderded_nop_percentages)))
