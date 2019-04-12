@@ -85,9 +85,9 @@ class Bitfinex:
         self.costum_print(res)
         if(res['result'] == 'success'): #
             if('address_pool' in res):
-                return res['address'], res['address_pool']
+                return {'address':res['address'], 'addressTag':res['address_pool']}
             else:
-                return res['address']
+                return {'address':res['address']}
         else:
             self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
             return -1
