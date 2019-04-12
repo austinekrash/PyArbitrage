@@ -33,8 +33,10 @@ class Binance():
     __instance = None
     _table = 'binance'
     _json = None
+    _fee = None
     _client = None
     _url = 'https://binance.com/api/v3/ticker/price'
+    _url_fee = 'https://binance.com/api/v1/exchangeInfo'
 
     @staticmethod
     def Factory(apiKey, secretKey):
@@ -60,6 +62,9 @@ class Binance():
         try:
             r = requests.get(self._url)
             self._json = json.loads(r.content)
+
+            r2 = requests.get(self._url_fee)
+            self._fee = json.loads(r2.content)
         except (r.status_code != 200):
             raise Exception('Some problems retrieving price: '+r.status_code)
     
@@ -72,10 +77,7 @@ class Binance():
         return -1
 
     def find_asset(self, pair_symbol):
-        r = requests.get("https://binance.com/api/v1/exchangeInfo")
-        datastore = json.loads(r.content)
-        pairs = datastore.get('symbols')
-
+        pairs = self._fee.get('symbols')
         for index in range(len(pairs)):
             if pairs[index].get('symbol') == pair_symbol:
                 return [pairs[index].get('baseAsset'), pairs[index].get('quoteAsset')]
