@@ -134,8 +134,6 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
     if not start and not end:
         print('both start and end are None!!')
         return -3
-    print(start)
-    print(end)
     withdrawalFee = float(start[0][1]) #query
     depositFee = float(end[0][2])  #query
     takerStart = float(start[0][4])
