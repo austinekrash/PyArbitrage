@@ -30,43 +30,6 @@ def is_advantages(startAmount, endAmount):
         return True
 
 
-def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, priceEnd, setAmount, percentage):
-    #SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee  WHERE symbol = 'BTC' AND exchange = 'binance'
-    try:
-        conn = psycopg2.connect("dbname='arbitraggio' user='ale' host='localhost' password='pippo'")
-    except:
-        print("I am unable to connect to the database")
-
-    symbolStart = eval(startExchange).find_asset(pairStart)[0]
-    symbolEnd = eval(endExchange).find_asset(pairEnd)[1]
-    cur = conn.cursor()
-    cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolStart +  "' AND exchange ='" + startExchange + "'")
-    start = cur.fetchall()
-    cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolEnd +  "' AND exchange ='" + endExchange + "'")
-    end = cur.fetchall()
-    withdrawalFee = float(start[0][1]) #query
-    depositFee = float(end[0][2])  #query
-    takerStart = float(start[0][4])
-    takerEnd = float(end[0][4])  #query
-    startWithdrawal = float(setAmount - (setAmount * takerStart/100) - withdrawalFee)
-    endWithdrawal = float(startWithdrawal - depositFee)
-    sellCurr = float(endWithdrawal - endWithdrawal * takerEnd /100)
-
-    #cur.execute("SELECT symbol FROM " + startExchange +" WHERE base_asset = '" + symbolStart +  "' AND quote_asset = 'BTC' AND exchange_name ='" + startExchange + "'")
-    #symbol1 = cur.fetchall()
-    #cur.execute("SELECT symbol FROM " + endExchange +" WHERE base_asset = '" + symbolEnd +  "' AND quote_asset = 'BTC' AND exchange_name ='" + endExchange + "'")
-    #symbol2 = cur.fetchall()
-    #price1 = eval(startExchange).get_price_pairs(symbol1)
-    #price2 = eval(endExchange).get_price_pairs(symbol2)
-    startAmount = float(priceStart)*float(setAmount)
-    endAmount = float(priceEnd)*sellCurr
-    if is_advantages(startAmount, endAmount):
-        percentage_fee = (endAmount - startAmount) / startAmount*100
-        #return (startExchange, endExchange, pairStart, pairEnd, priceStart, priceEnd)
-        return {"startAmount": startAmount, "endAmount": endAmount, "percentage": percentage, "percentage_fee": percentage_fee ,"startExchange": startExchange, "startSymbol": pairStart, "startPrice": priceStart, "endExchange": endExchange, "endSymbol": pairEnd, "endPrice": priceEnd}
-
-
-
 #arbitrage_fee('bitfinex', 'binance', 'BTC', 'BTC', '1', '1', '10')
 
 
