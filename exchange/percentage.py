@@ -120,7 +120,7 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
         print(symbolStart)
         print(symbolEnd)
         print("NOT EQUALS")
-        return -1
+        return -2
     cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolStart +  "' AND exchange ='" + startExchange + "'")
     start = cur.fetchall()
     if not start:
@@ -133,7 +133,7 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
         end = cur.fetchall()
     if not start and not end:
         print('both start and end are None!!')
-        return -1
+        return -3
     print(start)
     print(end)
     withdrawalFee = float(start[0][1]) #query
