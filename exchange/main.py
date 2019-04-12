@@ -59,8 +59,8 @@ print(poloniex.get_deposit_address('XRP'))
 '''
 bittrex = Bittrex.Factory(E_BITTREXapiKey, E_BITTREXsecretKey)
 bittrex.sync()
-bittrex.get_deposit_address('XRP')
-
+#bittrex.get_deposit_address('XRP')
+print(bittrex.is_frozen('ETC'))
 #print(arbitrage_fee('poloniex', 'bitfinex', 'BTC_REP', 'tREPBTC', 0.00350197, 0.0035394, 100, 13))
 #print(poloniex.get_deposit_address('XRP'))
 #poloniex.get_open_orders()
