@@ -163,11 +163,15 @@ for perc in orderded_nop_percentages:
     
 
 print('-----------------------------------------------------------------------------------------')
-
+fee_list = []
 for item in orderded_nop_percentages:
     print(item['startExchange']+" "+item['endExchange']+" "+item['startSymbol']+" "+item['endSymbol']+" "+str(item['startPrice'])+" "+str(item['endPrice'])+" "+str(100)+" "+str(item['percentage']))
-    fee_list = arbitrage_fee(item['startExchange'], item['endExchange'], item['startSymbol'], item['endSymbol'], float(item['startPrice']), float(item['endPrice']), 300, float(item['percentage']), conn, cur)
+    fee_list.append(arbitrage_fee(item['startExchange'], item['endExchange'], item['startSymbol'], item['endSymbol'], float(item['startPrice']), float(item['endPrice']), 300, float(item['percentage']), conn, cur))
 
 print('-----------------------------------------------------------------------------------------')
 
+fee_sorted = sorted(fee_list, key=lambda k: k['percentage_fee'], reverse=True) 
+for item in fee_sorted:
+    print(item)
+    
 close_db(conn, cur)
