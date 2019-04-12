@@ -85,7 +85,7 @@ class Bittrex:
             sys.exit(1)
         #aggiungere tag su monete tipo ripple
 
-    def __is_frozen(self, symbol):
+    def is_frozen(self, symbol):
         auth = self._url_account+'getdepositaddress?apikey='+self._apiKey+'&currency='+symbol+'&nonce='+self.get_nonce()
         signature = hmac.new(self._secretKey, auth.encode('utf-8'), hashlib.sha512).hexdigest()
         headers = {'apisign': signature}
