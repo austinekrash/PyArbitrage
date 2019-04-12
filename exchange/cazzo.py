@@ -23,7 +23,20 @@ A_BITFINEXapiKey = 'SxBHFSegUgIjDXCKCJSbGRPAxmGdgNCVFRStoVkLaaD'
 A_BITFINEXsecretKey = '7Ud65qmtjg1lFA4j1u8e5tu3CeU4bL2V4Ni79an6B0P'
 
 binance = Binance.Factory(E_BINANCEapiKey, E_BINANCEsecretKey)
-binance.sync()
-pax = binance.find_asset('PAXBTC')
+bitfinex = Bitfinex.Factory(A_BITFINEXapiKey, A_BITFINEXsecretKey)
+bittrex = Bittrex.Factory(E_BITTREXapiKey,E_BITTREXsecretKey)
+poloniex = Poloniex.Factory(A_POLONIEXapiKey, A_POLONIEXsecretKey)
+max = [None, 0]
 
-print(pax)
+cex = Cex.Factory() # Sarà da togliere
+binance.sync()
+bitfinex.sync()
+bittrex.sync()
+poloniex.sync()
+cex.sync()
+
+bittrex.get_balances()
+
+
+
+

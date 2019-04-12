@@ -151,6 +151,26 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
     else:
         return -1
 
+    def where_i_am():
+        binance.get_balances()
+        poloniex.get_balances()
+        bittrex.get_balances()
+        binance.get_balances()
+        binance.sync()
+        bitfinex.sync()
+        bittrex.sync()
+        poloniex.sync()
+        cex.sync()
+        bal = binance.get_balances().get('balances')
+        max = [None, 0]
+        #binance
+        for index in range(len(bal)):
+            if float(bal[index].get('free')) >= max[1]:
+                max[1] = float(bal[index].get('free'))
+                max[0] = bal[index].get('asset')
+        
+
+
 ###########################################################################
     
 binance, bitfinex, bittrex, poloniex, cex = initialize_exchanges()
