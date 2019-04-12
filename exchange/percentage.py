@@ -166,7 +166,9 @@ print('-------------------------------------------------------------------------
 fee_list = []
 for item in orderded_nop_percentages:
     print(item['startExchange']+" "+item['endExchange']+" "+item['startSymbol']+" "+item['endSymbol']+" "+str(item['startPrice'])+" "+str(item['endPrice'])+" "+str(100)+" "+str(item['percentage']))
-    fee_list.append(arbitrage_fee(item['startExchange'], item['endExchange'], item['startSymbol'], item['endSymbol'], float(item['startPrice']), float(item['endPrice']), 300, float(item['percentage']), conn, cur))
+    res = arbitrage_fee(item['startExchange'], item['endExchange'], item['startSymbol'], item['endSymbol'], float(item['startPrice']), float(item['endPrice']), 300, float(item['percentage']), conn, cur)
+    if  not isinstance(res , int):
+        fee_list.append(res)
 
 print('-----------------------------------------------------------------------------------------')
 
