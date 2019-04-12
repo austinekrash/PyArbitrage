@@ -170,8 +170,4 @@ for item in orderded_nop_percentages:
 
 print('-----------------------------------------------------------------------------------------')
 
-fee_sorted = sorted(fee_list, key=lambda k: k['percentage_fee'], reverse=True) 
-for item in fee_sorted:
-    print(item)
-    
 close_db(conn, cur)
