@@ -140,7 +140,7 @@ class Binance():
         self.costum_print(res)
         return res
     
-    def __is_frozen(self, symbol): #return depositStatus, withdrawStatus
+    def is_frozen(self, symbol): #return depositStatus, withdrawStatus
         res = self._client.get_asset_details()
         if( res['success'] is True):
             for key,value in res['assetDetail'].items():

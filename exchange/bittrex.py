@@ -12,7 +12,6 @@ class Bittrex:
     _json = None
     _url = 'https://api.bittrex.com/api/v1.1'
     _url_account = 'https://api.bittrex.com/api/v1.1/account/'
-    _url_account_v3_alpha = 'https://api.bittrex.com/v3/'
     _url_market = 'https://api.bittrex.com/api/v1.1/market/'
     _apiKey = None
     _secretKey = None
@@ -66,14 +65,10 @@ class Bittrex:
         self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
         return -1
 
+
     def get_deposit_address(self, symbol):
-        #auth = self._url_account_v3_alpha+'addresses/'+symbol+'?apikey='+self._apiKey+'&nonce='+self.get_nonce()
-        auth = self._url_account_v3_alpha+'addresses/'+symbol
-        content = hashlib.sha512(' '.encode('utf-8')).hexdigest()
-        print(content)
-        presign = (self.get_nonce()+''+auth+'GET'+content).encode('utf-8')
-        signature = hmac.new(self._secretKey, presign, hashlib.sha512).hexdigest()
-        #signature = hmac.new(self._secretKey, auth.encode('utf-8'), hashlib.sha512).hexdigest()
+        auth = self._url_account+'getdepositaddress?apikey='+self._apiKey+'&currency='+symbol+'&nonce='+self.get_nonce()
+        signature = hmac.new(self._secretKey, auth.encode('utf-8'), hashlib.sha512).hexdigest()
         headers = {'apisign': signature}
         try:
             r = requests.get(auth, headers=headers)
@@ -89,6 +84,23 @@ class Bittrex:
                 return -1
             sys.exit(1)
         #aggiungere tag su monete tipo ripple
+
+    def is_frozen(self, symbol):
+        auth = self._url_account+'getdepositaddress?apikey='+self._apiKey+'&currency='+symbol+'&nonce='+self.get_nonce()
+        signature = hmac.new(self._secretKey, auth.encode('utf-8'), hashlib.sha512).hexdigest()
+        headers = {'apisign': signature}
+        try:
+            r = requests.get(auth, headers=headers)
+            res = json.loads(r.content)
+            self.costum_print(res)
+        except (r.status_code != 200):
+            raise Exception('Some problems retrieving price: '+r.status_code)
+        if( True is json.loads(r.content).get('success')):
+            return 0
+        if(res.get('messagge') == 'CURRENCY_OFFLINE'):
+            return 1
+        return 0
+
 
     #paymentid CryptoNotes/BitShareX/Nxt/XRP
     def withdraw(self, symbol, quantity, to_address, paymentid = None):
@@ -217,3 +229,19 @@ class Bittrex:
             else:
                 self.costum_print(' some problems')
                 return -1
+
+
+'''
+auth = self._url_account_v3_alpha+'addresses/'+symbol
+print(auth)
+Api_Timestamp = self.get_nonce()
+print(Api_Timestamp)
+content = hashlib.sha512(''.encode('utf-8')).hexdigest()
+print(content)
+presign = (Api_Timestamp+auth+'GET'+content+'').encode('utf-8')
+print(presign)
+signature = hmac.new(self._secretKey, presign, hashlib.sha512).hexdigest()
+print(signature)
+#signature = hmac.new(self._secretKey, auth.encode('utf-8'), hashlib.sha512).hexdigest()
+headers = {'Api-Key': self._apiKey, 'Api-Timestamp': Api_Timestamp, 'Api-Content-Hash':content,'Api-Signature':signature }
+'''
