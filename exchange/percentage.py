@@ -117,6 +117,8 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
     symbolStart = eval(startExchange).find_asset(pairStart)[0]
     symbolEnd = eval(endExchange).find_asset(pairEnd)[0]
     if symbolStart != symbolEnd:
+        print(pairStart)
+        print(pairEnd)
         print(symbolStart)
         print(symbolEnd)
         print("NOT EQUALS")
