@@ -105,7 +105,7 @@ class Binance():
 
     def get_balance(self, symbol): # return couple: free, locked
         res = self._client.get_asset_balance(asset=symbol)
-        self.costum_print(res)
+        #self.costum_print(res)
         return res['free'], res['locked']
 
     def get_balances(self):
