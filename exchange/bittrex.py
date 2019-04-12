@@ -12,6 +12,7 @@ class Bittrex:
     _json = None
     _url = 'https://api.bittrex.com/api/v1.1'
     _url_account = 'https://api.bittrex.com/api/v1.1/account/'
+    _url_account_v3_alpha = 'https://api.bittrex.com/v3/'
     _url_market = 'https://api.bittrex.com/api/v1.1/market/'
     _apiKey = None
     _secretKey = None
@@ -27,8 +28,8 @@ class Bittrex:
             raise Exception("This class is a singleton.")
         else:
             Bittrex.__instance = self
-            _apiKey = apiKey
-            _secretKey = bytearray(secretKey, "utf-8")
+            self._apiKey = apiKey
+            self._secretKey = bytearray(secretKey, "utf-8")
 
     @staticmethod
     def get_nonce():
@@ -66,8 +67,13 @@ class Bittrex:
         return -1
 
     def get_deposit_address(self, symbol):
-        auth = self._url_account+'getdepositaddress?apikey='+self._apiKey+'&currency='+symbol+'&nonce='+self.get_nonce()
-        signature = hmac.new(self._secretKey, auth.encode('utf-8'), hashlib.sha512).hexdigest()
+        #auth = self._url_account_v3_alpha+'addresses/'+symbol+'?apikey='+self._apiKey+'&nonce='+self.get_nonce()
+        auth = self._url_account_v3_alpha+'addresses/'+symbol
+        content = hashlib.sha512(' '.encode('utf-8')).hexdigest()
+        print(content)
+        presign = (self.get_nonce()+''+auth+'GET'+content).encode('utf-8')
+        signature = hmac.new(self._secretKey, presign, hashlib.sha512).hexdigest()
+        #signature = hmac.new(self._secretKey, auth.encode('utf-8'), hashlib.sha512).hexdigest()
         headers = {'apisign': signature}
         try:
             r = requests.get(auth, headers=headers)

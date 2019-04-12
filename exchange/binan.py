@@ -91,7 +91,7 @@ class Binance():
         res = self._client.get_deposit_address(asset=symbol)
         if( res['success'] is True):
             self.costum_print(res)
-            return res['address'], res['addressTag']
+            return {'address':res['address'], 'addressTag': res['addressTag']}
         else:
             self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
             return -1

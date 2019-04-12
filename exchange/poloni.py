@@ -69,13 +69,13 @@ class Poloniex():
         res = self.pol.generateNewAddress(symbol)
         self.costum_print(res)
         if res['success'] == 1:
-            return res['response']
+            return {'address':res['response'], 'addressTag': '123456'}
         elif res['success'] == 0:
-            listAddress = self.return_deposit_address()
-            return listAddress[symbol]
+            listAddress = self.__return_deposit_address()
+            return {'address': listAddress[symbol], 'addressTag': '123456'}
             #todo nel caso di errore return -1
     
-    def return_deposit_address(self):
+    def __return_deposit_address(self):
         return self.pol.returnDepositAddresses()
     
     def get_balances(self):

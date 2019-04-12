@@ -42,18 +42,24 @@ bitfinex.sync()
 #bitfinex.get_balance('btc')  #“trading”, “deposit” or “exchange”
 bitfinex.get_withdraw_fee('btc')
 '''
+'''
 binance = Binance.Factory(E_BINANCEapiKey, E_BINANCEsecretKey)
 binance.sync()
-bittrex = Bittrex.Factory(E_BITTREXapiKey, E_BITTREXsecretKey)
-bittrex.sync()
 bitfinex = Bitfinex.Factory(A_BITFINEXapiKey, A_BITFINEXsecretKey)
 bitfinex.sync()
 cex = Cex().Factory()
 cex.sync()
 poloniex = Poloniex.Factory(A_POLONIEXapiKey,A_POLONIEXsecretKey)
 poloniex.sync()
-
-poloniex.is_frozen('ZRX')
+'''
+'''
+poloniex = Poloniex.Factory(A_POLONIEXapiKey,A_POLONIEXsecretKey)
+poloniex.sync()
+print(poloniex.get_deposit_address('XRP'))
+'''
+bittrex = Bittrex.Factory(E_BITTREXapiKey, E_BITTREXsecretKey)
+bittrex.sync()
+bittrex.get_deposit_address('XRP')
 
 #print(arbitrage_fee('poloniex', 'bitfinex', 'BTC_REP', 'tREPBTC', 0.00350197, 0.0035394, 100, 13))
 #print(poloniex.get_deposit_address('XRP'))
