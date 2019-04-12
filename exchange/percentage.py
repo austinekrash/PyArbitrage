@@ -211,7 +211,7 @@ for item in orderded_nop_percentages:
         fee_list.append(res)
 
 print('-----------------------------------------------------------------------------------------')
-print('------------------------------ '+i+" len"+len(orderded_nop_percentages))
+print('------------------------------ '+str(i)+" len"+str(len(orderded_nop_percentages)))
 fee_sorted = sorted(fee_list, key=lambda k: k['percentage_fee'], reverse=True) 
 for item in fee_sorted:
     print(item)
