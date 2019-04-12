@@ -78,7 +78,6 @@ class Binance():
 
     def find_asset(self, pair_symbol):
         pairs = self._fee.get('symbols')
-        print(pairs)
         for index in range(len(pairs)):
             if pairs[index].get('symbol') == pair_symbol:
                 print("-------------------------------------------------------- "+pairs[index].get('baseAsset'), pairs[index].get('quoteAsset'))
