@@ -114,8 +114,9 @@ def is_advantages(startAmount, endAmount):
         return True
 
 def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, priceEnd, setAmount, percentage, conn, cur):
-    print(pairStart)
-    print(pairEnd)
+    cryptoTaxi = 'XLM' #crypto scelta per muoversi tra exchange
+    #TODO bisogna scegliere e settare la lista delle monete da usare per lo spostamento, poi generalizzare questa quyery
+    whereIam = where_i_am()
     symbolStart = eval(startExchange).find_asset(pairStart)[0]
     symbolEnd = eval(endExchange).find_asset(pairEnd)[0]
     if symbolStart != symbolEnd:
@@ -136,11 +137,17 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
     if not start and not end:
         print('both start and end are None!!')
         return -3
-    withdrawalFee = float(start[0][1]) #query
-    depositFee = float(end[0][2])  #query
+    withdrawalFee = float(start[0][1])
+    depositFee = float(end[0][2]) 
     takerStart = float(start[0][4])
-    takerEnd = float(end[0][4])  #query
-    startWithdrawal = float(setAmount - (setAmount * takerStart/100) - withdrawalFee)
+    takerEnd = float(end[0][4]) 
+    firstWithdrawalFee = 0
+    if whereIam[2] != startExchange:
+        cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + cryptoTaxi + "' AND exchange ='" + whereIam[2] + "'")
+        wia = cur.fetchall()
+        firstWithdrawalFee = wia[1] + (whereIam[1] * wia[4] / 100)
+        eval(whereIam[2]).get_price_pairs()
+    startWithdrawal = float(setAmount - (setAmount * takerStart/100) - withdrawalFee - firstWithdrawalFee)
     endWithdrawal = float(startWithdrawal - depositFee)
     sellCurr = float(endWithdrawal - endWithdrawal * takerEnd /100)
     startAmount = float(priceStart)*float(setAmount)
@@ -161,26 +168,36 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
         bittrex.sync()
         poloniex.sync()
         cex.sync()
-        balBin = binance.get_balances().get('balances')
-        max = [None, 0]
+        max = [None, 0, None]
         #binance
+        balBin = binance.get_balances().get('balances')
         for index in range(len(balBin)):
             if float(balBin[index].get('free')) >= max[1]:
                 max[1] = float(balBin[index].get('free'))
                 max[0] = balBin[index].get('asset')
-        
+                max[2] = 'binance'
+        #poloniex
         balPolo = poloniex.get_available_account_balances()
         for key, value in balPolo['exchange'].items():
             if value >= max[1]:
                 max[1] = value
                 max[0] = key
-        
+                max[2] = 'poloniex'
+        #bittrex
         balBit = bittrex.get_balances()
         if balBit['success'] == 'true':
             for i in range(len(balBit['result'])):
-                if balBit['result']['Balance'] >= max[1]:
-                    max[1] = balBit['result']['Balance']
-                    max[0] = balBit['result']['Currency']
+                if balBit['result'][i]['Balance'] >= max[1]:
+                    max[1] = balBit['result'][i]['Balance']
+                    max[0] = balBit['result'][i]['Currency']
+                    max[2] = 'bittrex'
+        #bitfinex
+        balBitfi = bitfinex.get_balances()
+        for i in range(len(balBitfi)):
+            if float(balBitfi[i]['amount']) >= max[1]:
+                max[0] = balBitfi[i]['currency']
+                max[1] = float(balBitfi[i]['amount'])
+                max[2] = 'bitfinex'
         
         return max
         
