@@ -159,11 +159,20 @@ class Poloniex():
         #da vedere poi cosa far restituire
         #per ora non serve
     
+<<<<<<< HEAD
     def is_frozen(self, symbol):
         symbol = self.find_asset(symbol)[0]
+=======
+    def is_frozen(self, pair):
+        symbol = self.find_asset(pair)[0]
+>>>>>>> a3aedbc379225c12daba0633d14fe8385f45d7c8
         res = self.pol.returnCurrencies().get(symbol)
         self.costum_print(res)
         if res['disabled'] == 0 and res['delisted'] == 0 and res['frozen'] == 0:
             return {'withdrawal': False, 'deposit': False}
         else:
             return {'withdrawal': True, 'deposit': True}
+<<<<<<< HEAD
+=======
+
+>>>>>>> a3aedbc379225c12daba0633d14fe8385f45d7c8

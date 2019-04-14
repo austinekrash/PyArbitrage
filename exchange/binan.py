@@ -83,13 +83,14 @@ class Binance():
             if pairs[index].get('symbol') == pair_symbol:
                 print("-------------------------------------------------------- "+pairs[index].get('baseAsset'), pairs[index].get('quoteAsset'))
                 return [pairs[index].get('baseAsset'), pairs[index].get('quoteAsset')]
+        return -1
 
     def get_deposit_address(self, symbol):
         if (self.is_frozen(symbol) == -1):
             self.costum_print('Frozen '+symbol)
             return -1
         res = self._client.get_deposit_address(asset=symbol)
-        if( res['success'] is True):
+        if res['success'] is True:
             self.costum_print(res)
             return {'address':res['address'], 'addressTag': res['addressTag']}
         else:
@@ -140,17 +141,29 @@ class Binance():
         self.costum_print(res)
         return res
     
-    def is_frozen(self, symbol): #return depositStatus, withdrawStatus
+    def is_frozen(self, pair): #return depositStatus, withdrawStatus
+        symbol = self.find_asset(pair)[0]
         res = self._client.get_asset_details()
+        if self.is_tradable(pair) == False:
+            return {'withdrawal': True, 'deposit': True}
         if( res['success'] is True):
             for key,value in res['assetDetail'].items():
                 if(key == symbol):
-                    return value['depositStatus'], value['withdrawStatus']
+                    return {'withdrawal': not value['withdrawStatus'], 'deposit': not value['depositStatus']}
+                    #return not value['depositStatus'], not value['withdrawStatus']
             self.costum_print("---------------------------------VALUE NOT FOUND---------------------------------")
-            return -1
+            return {'withdrawal': True, 'deposit': True}
         else:
             self.costum_print('Frozen')
-            return -1
+            return {'withdrawal': True, 'deposit': True}
+
+    def is_tradable(self, pair):
+        for item in self._fee['symbols']:
+            if pair.lower() == item['symbol'].lower():
+                if item['status'].lower() == 'trading':
+                    return True
+                else:
+                    return False
     
     def is_tradable(self, symbol):
         pass
