@@ -228,7 +228,7 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
     endAmount = float(priceEnd) * float(end)
 
     #calcolo solo se non freezato e vantaggioso
-    if is_advantages(startAmount, endAmount) and eval(startExchange).is_frozen(symbolStart)['withdrawal'] and eval(endExchange).is_frozen(symbolEnd)['deposit']:
+    if is_advantages(startAmount, endAmount) and not eval(startExchange).is_frozen(symbolStart)['withdrawal'] and not eval(endExchange).is_frozen(symbolEnd)['deposit']:
         percentage_fee = (endAmount - startAmount) / startAmount*100
         return {"startAmount": startAmount, "endAmount": endAmount, "percentage": percentage, "percentage_fee": percentage_fee ,"startExchange": startExchange, "startSymbol": pairStart, "startPrice": priceStart, "endExchange": endExchange, "endSymbol": pairEnd, "endPrice": priceEnd}
     else:
