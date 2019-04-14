@@ -265,10 +265,11 @@ percentages = compute_percentages(intersectionView, cur)
 #orderded_nop_percentages = remove_sort_duplicates(percentages)
 print(type(percentages[0]['percentage']))
 orderded_nop_percentages = sorted(percentages, key=lambda k: k['percentage'], reverse=True) 
+print(orderded_nop_percentages)
 
 
 
-for perc in percentages:
+for perc in orderded_nop_percentages:
     print(perc)
     
 
