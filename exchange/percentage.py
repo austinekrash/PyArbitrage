@@ -97,6 +97,10 @@ def __percentage(cryptoIntersection):
     elif price2 >= price1 and price1 > 0:
         percentages = (price2 - price1) / price1 * 100
         return {"percentage": percentages ,"startExchange": exchange1, "startSymbol": symbol1, "startPrice": price1, "endExchange": exchange2, "endSymbol": symbol2, "endPrice": price2}
+    else:
+        print('----------------------------erroooooooooooore--------------------------------------------------------')
+        print({"percentage": 0 ,"startExchange": exchange1, "startSymbol": symbol1, "startPrice": price1, "endExchange": exchange2, "endSymbol": symbol2, "endPrice": price2}
+)
     #return tupla con percentuale, exchange di partenza, exchange di destinazione
 
 def remove_sort_duplicates(percentages):
