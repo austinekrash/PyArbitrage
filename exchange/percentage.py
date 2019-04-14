@@ -74,10 +74,10 @@ def compute_percentages(intersectionView, cur):
     #per ogni exchange prendo la lista delle crypto
     for view in intersectionView:
         cur.execute("SELECT * FROM "+view)
-        cryptoIntersection = []
         for x in cur.fetchall():#prendo tutte le tuple per ogni view
-            cryptoIntersection.append(x)
-            percentages.append(__percentage(x))            
+            y = __percentage(x)
+            if y != 0:
+                percentages.append(__percentage(x))            
             #chiamo api prezzo su symbol
             #inserisco in percentages la coppia o tripla symbol std_symbol percentuale
             #non ha senso prendere anche il prezzo, perchè il prezzo va preso subito prima della vednita/Acquisto
@@ -98,19 +98,13 @@ def __percentage(cryptoIntersection):
         percentages = (price2 - price1) / price1 * 100
         return {"percentage": percentages ,"startExchange": exchange1, "startSymbol": symbol1, "startPrice": price1, "endExchange": exchange2, "endSymbol": symbol2, "endPrice": price2}
     else:
-        print('----------------------------erroooooooooooore--------------------------------------------------------')
-        print({"percentage": 0 ,"startExchange": exchange1, "startSymbol": symbol1, "startPrice": price1, "endExchange": exchange2, "endSymbol": symbol2, "endPrice": price2}
-)
+        return 0
     #return tupla con percentuale, exchange di partenza, exchange di destinazione
 
 def remove_sort_duplicates(percentages):
     seen = set()
     no_dup_list = []
     for d in percentages:
-        print("------------------------------")
-        print(d)
-        print("------------------------------")
-
         t = tuple(d.items())
         if t not in seen:
             seen.add(t)
