@@ -267,16 +267,17 @@ for perc in orderded_nop_percentages:
 
 print('-----------------------------------------------------------------------------------------')
 fee_list = []
+i = 0
 for item in orderded_nop_percentages:
     print(item['startExchange']+" "+item['endExchange']+" "+item['startSymbol']+" "+item['endSymbol']+" "+str(item['startPrice'])+" "+str(item['endPrice'])+" "+str(100)+" "+str(item['percentage']))
     res = arbitrage_fee(item['startExchange'], item['endExchange'], item['startSymbol'], item['endSymbol'], float(item['startPrice']), float(item['endPrice']), 300, float(item['percentage']), cur)
     if  not isinstance(res , int):
-        fee_list.append(res)
+        print(res)
 
 print('-----------------------------------------------------------------------------------------')
-
-fee_sorted = sorted(fee_list, key=lambda k: k['percentage_fee'], reverse=True) 
-for item in fee_sorted:
-    print(item)
+print('------------------------------ '+str(i)+" len"+str(len(orderded_nop_percentages)))
+#fee_sorted = sorted(fee_list, key=lambda k: k['percentage_fee'], reverse=True) 
+#for item in fee_sorted:
+#    print(item)
     
 close_db(conn, cur)
