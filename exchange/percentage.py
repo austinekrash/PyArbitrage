@@ -157,7 +157,7 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
     amWithdrawalFee = float(am[0][1])
     takerAm = float(am[0][4])
     
-    
+    print(startExchange + " " + endExchange + " " + pairStart)
     #Fee amount of withdrawal and buy/sell on start
     startWithdrawalFee = float(start[0][1])
     takerStart = float(start[0][4])
