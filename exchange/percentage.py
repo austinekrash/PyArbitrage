@@ -263,6 +263,7 @@ conn, cur = open_db()
 intersectionView = fetch_views_db(cur)
 percentages = compute_percentages(intersectionView, cur)
 #orderded_nop_percentages = remove_sort_duplicates(percentages)
+print(type(percentages[0]['percentage']))
 orderded_nop_percentages = sorted(percentages, key=lambda k: k['percentage'], reverse=True) 
 
 
