@@ -268,7 +268,7 @@ orderded_nop_percentages = sorted(percentages, key=lambda k: k['percentage'], re
 
 
 
-for perc in orderded_nop_percentages:
+for perc in percentages:
     print(perc)
     
 
