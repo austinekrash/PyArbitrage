@@ -125,6 +125,8 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
     symbolStart = eval(startExchange).find_asset(pairStart)[0]
     symbolEnd = eval(endExchange).find_asset(pairEnd)[0]
     am = None
+    amWithdrawalFee = None
+    takerAm = None
     if symbolStart != symbolEnd:
         print(symbolStart)
         print(symbolEnd)
