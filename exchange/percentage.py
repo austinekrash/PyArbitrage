@@ -103,6 +103,10 @@ def remove_sort_duplicates(percentages):
     seen = set()
     no_dup_list = []
     for d in percentages:
+        print("------------------------------")
+        print(d)
+        print("------------------------------")
+
         t = tuple(d.items())
         if t not in seen:
             seen.add(t)
