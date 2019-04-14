@@ -204,12 +204,12 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
         #in questo caso considero che quando arrivo sul nuovo exchange la moneta non coincida con quella dell'arbitraggio
         #quindi pago sia il withdrawal dal primo al seconod exchange che il taker sul primo
         sw = startWithdrawalFee + endDepositFee
-        feeStart = balanceAmount * takerStart/100
+        feeStart = takerStart/100 #DA LEVARE COGLIONE
         firstWithdrawalFee = amWithdrawalFee + startDepositFee
         feeEnd = takerEnd/100
         #controllo se la moneta coincide con quella utilizzata per spostarsi
         if symbolAmount != cryptoTaxi:
-            firstFee = balanceAmount * takerAm/100
+            firstFee = takerAm / 100
             #se coincide non pago taker su exchangeamount
         #NON HO ANCORA CONSIDERATO LE FEE TAKER SU EXCHANGE END. 
         #QUELLE LE CALCOLO FUORI DAGLI IF
@@ -220,7 +220,7 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
     goToStart = float(balanceAmount - (balanceAmount * firstFee + firstWithdrawalFee))
     start = float(goToStart - (feeStart * goToStart + sw))
     #endWithdrawal = float(startWithdrawal - depositFee)
-    end = float(start- (start * takerEnd / 100))
+    end = float(start- (start * takerEnd))
     #sellCurr = float(endWithdrawal - endWithdrawal * takerEnd /100)
 
     #Price at start and at the end of arbitrage
@@ -228,7 +228,7 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
     endAmount = float(priceEnd) * float(end)
 
     #calcolo solo se non freezato e vantaggioso
-    print({"startAmount": startAmount, "endAmount": endAmount, "percentage": percentage, "startExchange": startExchange, "startSymbol": pairStart, "startPrice": priceStart, "endExchange": endExchange, "endSymbol": pairEnd, "endPrice": priceEnd})
+    #print({"startAmount": startAmount, "endAmount": endAmount, "percentage": percentage, "startExchange": startExchange, "startSymbol": pairStart, "startPrice": priceStart, "endExchange": endExchange, "endSymbol": pairEnd, "endPrice": priceEnd})
 
     if is_advantages(startAmount, endAmount) and not eval(startExchange).is_frozen(symbolStart)['withdrawal'] and not eval(endExchange).is_frozen(symbolEnd)['deposit']:
         percentage_fee = (endAmount - startAmount) / startAmount*100
