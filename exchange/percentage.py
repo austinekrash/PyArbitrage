@@ -100,14 +100,14 @@ def __percentage(cryptoIntersection):
     #return tupla con percentuale, exchange di partenza, exchange di destinazione
 
 def remove_sort_duplicates(percentages):
-    """seen = set()
+    seen = set()
     no_dup_list = []
     for d in percentages:
         t = tuple(d.items())
         if t not in seen:
             seen.add(t)
-            no_dup_list.append(d)"""
-    return sorted(percentages, key=lambda k: k['percentage'], reverse=True) 
+            no_dup_list.append(d)
+    return sorted(no_dup_list, key=lambda k: k['percentage'], reverse=True) 
 
 ############################## FEE ########################################
 
@@ -262,11 +262,7 @@ binance, bitfinex, bittrex, poloniex, cex = initialize_exchanges()
 conn, cur = open_db()
 intersectionView = fetch_views_db(cur)
 percentages = compute_percentages(intersectionView, cur)
-#orderded_nop_percentages = remove_sort_duplicates(percentages)
-print(type(percentages[0]['percentage']))
-orderded_nop_percentages = sorted(percentages)#sorted(percentages, key=lambda k: k['percentage'], reverse=True) 
-print(orderded_nop_percentages)
-
+orderded_nop_percentages = remove_sort_duplicates(percentages)
 
 
 for perc in orderded_nop_percentages:
