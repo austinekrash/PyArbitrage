@@ -57,6 +57,15 @@ class Poloniex():
         else:
             -1
 
+    def get_quote_asset(self):
+        return {'btc': 'btc', 'eth': 'eth', 'xmr': 'xmr', 'usdc': 'usdc', 'usdt':'usdt'}
+
+    def is_quote(self, symbol):
+        if self.get_quote_asset()[symbol.lower()] == symbol.lower():
+            return 1
+        else:
+            return 0
+
     def get_price_pairs(self, pair_symbol):
         for key, value in self._json.items():
             if(pair_symbol.lower() == key.lower()):

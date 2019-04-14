@@ -158,17 +158,58 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
             return -1
 
 
-    cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolAmount +  "' AND exchange ='" + amountExchange + "'")
+    cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + cryptoTaxi +  "' AND exchange ='" + amountExchange + "'")
     am = cur.fetchall()
     if not am:
-        cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolAmount +  "' AND exchange ='" + endExchange + "'")
+        cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + cryptoTaxi +  "' AND exchange ='" + endExchange + "'")
         am = cur.fetchall()
     if not am:
-        cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolAmount +  "' AND exchange ='" + startExchange + "'")
+        cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + cryptoTaxi +  "' AND exchange ='" + startExchange + "'")
         am = cur.fetchall()
         if not am:
             return -1
     
+    #convertire amount in cryptotaxi
+    #generare coppia
+    #se amount è quote_asset generiamo coppia
+    #sennò generi la coppia amountBTC poi btccryptotaxi
+    doubleTaker = False
+    cur.execute("SELECT * FROM "+ eval(amountExchange)._table +" WHERE base_asset = '"+symbolAmount+"' AND quote_asset = '"+cryptoTaxi+"'")#improbabile
+    quote_taxi = cur.fetchall()
+    if not quote_taxi:
+        cur.execute("SELECT * FROM "+ eval(amountExchange)._table +" WHERE base_asset = '"+cryptoTaxi+"' AND quote_asset = '"+symbolAmount+"'")
+        quote_taxi = cur.fetchall()
+        if not quote_taxi:
+            cur.execute("SELECT s1.quote_asset from (select distinct * from "+ eval(amountExchange)._table +" WHERE base_asset = '"+cryptoTaxi+"')s1 inner JOIN (SELECT distinct * from "+ eval(amountExchange)._table +" WHERE base_asset = '"+symbolAmount+"')s2 on s1.quote_asset = s2.quote_asset")
+            quote_taxi = cur.fetchall()
+            doubleTaker = True
+
+    quote_asset = quote_taxi[0][0]
+    symbol_std = ''
+    for x in sorted([quote_asset.lower(), symbolAmount.lower()]):
+        symbol_std = symbol_std + x
+
+    cur.execute("SELECT symbol FROM "+eval(amountExchange)._table+" WHERE symbol_std = '"+symbol_std+"'")
+    pair = cur.fetchall()[0][0]
+
+    rate = eval(amountExchange).get_price_pairs(pair)#prezzo della coppia pair 
+    #con i prezzi va sempre fatta la MOLTIPLICAZIONE
+    amountExchange = amountExchange * rate
+
+    symbol_std = ''
+    for x in sorted([quote_asset.lower(), cryptoTaxi.lower()]):
+        symbol_std = symbol_std + x
+    if doubleTaker:
+        cur.execute("SELECT symbol FROM "+eval(amountExchange)._table+" WHERE symbol_std = '"+symbol_std+"'")
+        pair = cur.fetchall()[0][0]
+        rate = eval(amountExchange).get_price_pairs(pair)#prezzo della coppia pair 
+        #con i prezzi va sempre fatta la MOLTIPLICAZIONE
+        amountExchange = amountExchange * rate
+    #A questo punto siamo sull'exchange gisuto
+    #TODO se doubleTaker = 1 aumenta le fee nella formula
+
+    #TODO 
+
     amWithdrawalFee = float(am[0][1])
     takerAm = float(am[0][4])
     
