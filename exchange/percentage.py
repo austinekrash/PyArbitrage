@@ -172,7 +172,7 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
     amWithdrawalFee = float(am[0][1])
     takerAm = float(am[0][4])
     
-    print(startExchange + " " + endExchange + " " + pairStart)
+    #print(startExchange + " " + endExchange + " " + pairStart)
     #Fee amount of withdrawal and buy/sell on start
     startWithdrawalFee = float(start[0][1])
     takerStart = float(start[0][4])
@@ -228,6 +228,8 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
     endAmount = float(priceEnd) * float(end)
 
     #calcolo solo se non freezato e vantaggioso
+    print({"startAmount": startAmount, "endAmount": endAmount, "percentage": percentage, "percentage_fee": percentage_fee ,"startExchange": startExchange, "startSymbol": pairStart, "startPrice": priceStart, "endExchange": endExchange, "endSymbol": pairEnd, "endPrice": priceEnd})
+
     if is_advantages(startAmount, endAmount) and not eval(startExchange).is_frozen(symbolStart)['withdrawal'] and not eval(endExchange).is_frozen(symbolEnd)['deposit']:
         percentage_fee = (endAmount - startAmount) / startAmount*100
         return {"startAmount": startAmount, "endAmount": endAmount, "percentage": percentage, "percentage_fee": percentage_fee ,"startExchange": startExchange, "startSymbol": pairStart, "startPrice": priceStart, "endExchange": endExchange, "endSymbol": pairEnd, "endPrice": priceEnd}
@@ -301,7 +303,6 @@ for item in orderded_nop_percentages:
     print(item['startExchange']+" "+item['endExchange']+" "+item['startSymbol']+" "+item['endSymbol']+" "+str(item['startPrice'])+" "+str(item['endPrice'])+" "+str(100)+" "+str(item['percentage']))
     res = arbitrage_fee(item['startExchange'], item['endExchange'], item['startSymbol'], item['endSymbol'], float(item['startPrice']), float(item['endPrice']), 300, float(item['percentage']), cur, 'binance', 'BTC')
     if  not isinstance(res , int):
-        print('-------------------------------------------bfhkwbefhjkfbekjbefjkadfbkjadbkfj---------------------------------')
         print(res)
 
 print('-----------------------------------------------------------------------------------------')
