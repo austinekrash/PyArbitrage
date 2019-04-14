@@ -35,6 +35,8 @@ bittrex.sync()
 poloniex.sync()
 cex.sync()
 
+print(binance.is_frozen('ADABTC'))
+
 """
 import sys
 import json

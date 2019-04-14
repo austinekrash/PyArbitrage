@@ -113,10 +113,9 @@ def is_advantages(startAmount, endAmount):
     else:
         return True
 
-def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, priceEnd, setAmount, percentage, conn, cur):
+def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, priceEnd, balanceAmount, percentage, cur, amountExchange, symbolAmount):
     cryptoTaxi = 'XLM' #crypto scelta per muoversi tra exchange
     #TODO bisogna scegliere e settare la lista delle monete da usare per lo spostamento, poi generalizzare questa quyery
-    whereIam = where_i_am()
     symbolStart = eval(startExchange).find_asset(pairStart)[0]
     symbolEnd = eval(endExchange).find_asset(pairEnd)[0]
     if symbolStart != symbolEnd:
@@ -124,6 +123,8 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
         print(symbolEnd)
         print("NOT EQUALS")
         return -2
+    
+    #query per dati su start end e fee
     cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolStart +  "' AND exchange ='" + startExchange + "'")
     start = cur.fetchall()
     if not start:
@@ -134,29 +135,77 @@ def arbitrage_fee(startExchange, endExchange, pairStart, pairEnd, priceStart, pr
     if not end:
         cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolEnd +  "' AND exchange ='" + startExchange + "'")
         end = cur.fetchall()
-    if not start and not end:
-        print('both start and end are None!!')
+    if not symbolAmount:
+        cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + symbolAmount +  "' AND exchange ='" + amountExchange + "'")
+        am = cur.fetchall()
+    if not start and not end and not symbolAmount:
+        print('both start and end and amount are None!!')
         return -3
-    withdrawalFee = float(start[0][1])
-    depositFee = float(end[0][2]) 
+    
+    #Fee amount of withdrawal and buy/sell on start
+    startWithdrawalFee = float(start[0][1])
     takerStart = float(start[0][4])
+    startDepositFee = float(start[0][2]) 
+    #Fee amount of withdrawal and buy/sell on end
+    endDepositFee = float(end[0][2]) 
     takerEnd = float(end[0][4]) 
-    firstWithdrawalFee = 0
-    if whereIam[2] != startExchange:
-        cur.execute("SELECT min_widthdrawal, withdrawal, deposit, maker, taker FROM fee WHERE symbol = '" + cryptoTaxi + "' AND exchange ='" + whereIam[2] + "'")
-        wia = cur.fetchall()
-        firstWithdrawalFee = wia[1] + (whereIam[1] * wia[4] / 100)
-        eval(whereIam[2]).get_price_pairs()
-    startWithdrawal = float(setAmount - (setAmount * takerStart/100) - withdrawalFee - firstWithdrawalFee)
-    endWithdrawal = float(startWithdrawal - depositFee)
-    sellCurr = float(endWithdrawal - endWithdrawal * takerEnd /100)
-    startAmount = float(priceStart)*float(setAmount)
-    endAmount = float(priceEnd)*sellCurr
-    if is_advantages(startAmount, endAmount) and eval(startExchange).is_frozen(symbolStart) and eval(endExchange).is_frozen(symbolEnd):
+    #Fee amount of withdrawal and buy/sell on end
+    amWithdrawalFee = float(am[0][1])
+    takerAm = float(am[0][4])
+
+    firstWithdrawalFee = 0#fee del withdrawal dall'exchangeamount all'exchangeamount
+    firstFee = 0#fee sul buy/sell sull'exchange amount
+
+    feeStart = 0 #fee dovute al buy/sell della crypto su start
+    sw = 0 #fee del withdrawal da startexchange a endexchange
+    feeEnd = 0##fee dovute al buy/sell della crypto su start
+
+    #controllo se exchange di partenza = a quello in cui si trova il balance.
+    if startExchange == amountExchange:
+        sw = startWithdrawalFee + endDepositFee
+        feeEnd =takerEnd/100
+        #se coincidono controllo se il symbol coincide con quello dell'arbitraggio (symbolstart)
+        if symbolStart != symbolAmount:
+            #se coincidono allora non pago il taker sullo start
+            #se non coincidono pago il taker
+            feeStart = balanceAmount * takerStart/100
+    #se non coincidono
+    else:
+        #in questo caso comunque pago il taker su exchangestart
+        #in questo caso considero che quando arrivo sul nuovo exchange la moneta non coincida con quella dell'arbitraggio
+        #quindi pago sia il withdrawal dal primo al seconod exchange che il taker sul primo
+        sw = startWithdrawalFee + endDepositFee
+        feeStart = balanceAmount * takerStart/100
+        firstWithdrawalFee = amWithdrawalFee + startDepositFee
+        feeEnd = takerEnd/100
+        #controllo se la moneta coincide con quella utilizzata per spostarsi
+        if symbolAmount != cryptoTaxi:
+            firstFee = balanceAmount * takerAm/100
+            #se coincide non pago taker su exchangeamount
+        #NON HO ANCORA CONSIDERATO LE FEE TAKER SU EXCHANGE END. 
+        #QUELLE LE CALCOLO FUORI DAGLI IF
+
+
+    #computing fee on balance
+    #startWithdrawal = float(balanceAmount - (balanceAmount * takerStart/100) - withdrawalFee - firstWithdrawalFee)
+    goToStart = float(balanceAmount - (balanceAmount * firstFee + firstWithdrawalFee))
+    start = float(goToStart - (feeStart * goToStart + sw))
+    #endWithdrawal = float(startWithdrawal - depositFee)
+    end = float(start- (start * takerEnd / 100))
+    #sellCurr = float(endWithdrawal - endWithdrawal * takerEnd /100)
+
+    #Price at start and at the end of arbitrage
+    startAmount = float(priceStart) * float(goToStart)
+    endAmount = float(priceEnd) * float(end)
+
+    #calcolo solo se non freezato e vantaggioso
+    if is_advantages(startAmount, endAmount) and eval(startExchange).is_frozen(symbolStart)['withdrawal'] and eval(endExchange).is_frozen(symbolEnd)['deposit']:
         percentage_fee = (endAmount - startAmount) / startAmount*100
         return {"startAmount": startAmount, "endAmount": endAmount, "percentage": percentage, "percentage_fee": percentage_fee ,"startExchange": startExchange, "startSymbol": pairStart, "startPrice": priceStart, "endExchange": endExchange, "endSymbol": pairEnd, "endPrice": priceEnd}
     else:
         return -1
+    
+    #def __return_fee(startExchange, endExchange, amountExchange, ):
 
     def where_i_am():
         binance.get_balances()
@@ -220,7 +269,7 @@ print('-------------------------------------------------------------------------
 fee_list = []
 for item in orderded_nop_percentages:
     print(item['startExchange']+" "+item['endExchange']+" "+item['startSymbol']+" "+item['endSymbol']+" "+str(item['startPrice'])+" "+str(item['endPrice'])+" "+str(100)+" "+str(item['percentage']))
-    res = arbitrage_fee(item['startExchange'], item['endExchange'], item['startSymbol'], item['endSymbol'], float(item['startPrice']), float(item['endPrice']), 300, float(item['percentage']), conn, cur)
+    res = arbitrage_fee(item['startExchange'], item['endExchange'], item['startSymbol'], item['endSymbol'], float(item['startPrice']), float(item['endPrice']), 300, float(item['percentage']), cur)
     if  not isinstance(res , int):
         fee_list.append(res)
 
