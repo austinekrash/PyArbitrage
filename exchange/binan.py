@@ -86,7 +86,7 @@ class Binance():
         return -1
 
     def get_deposit_address(self, symbol):
-        if self.__is_frozen(symbol) == -1:
+        if (self.is_frozen(symbol) == -1):
             self.costum_print('Frozen '+symbol)
             return -1
         res = self._client.get_deposit_address(asset=symbol)
@@ -165,7 +165,9 @@ class Binance():
                 else:
                     return False
     
-    
+    def is_tradable(self, symbol):
+        pass
+
 '''    
     def get_price_pairs(self, pair_symbol):
         for index in range(len(self._json)):

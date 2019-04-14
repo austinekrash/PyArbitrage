@@ -18,6 +18,10 @@ E_POLONIEXapiKey = '8QF9DS6A-YJWQQLWW-ZKUM8YV8-YJ5HG70E'
 E_POLONIEXsecretKey = '6dd1afa15f71fe6c77bb0fd9348058f9d45deb99d0e9c5aed2752f974919f5b381db5f5e458c558e720805a1d840f56064253cce64a4c84fc0b05ad8f51d8ecc'
 
 #Api ale
+
+A_BITTREXapiKey = 'fe357e0ca4bd4cdebd37d06e3773c33f '
+A_BITTREXsecretKey = '9d9c8ebb584d40ffb5dfca4ada0bbf63'
+
 A_POLONIEXapiKey = '74DRDEIV-2G9W6KXO-QK6FY8Z9-LP1CAT98'
 A_POLONIEXsecretKey = '16962e88b0e3349e2f774d6eb5dd5bde54a59bcd120c637e0e2cca5dbb0f77d93379416ab4e6dbc4fe9116007a548913b1f7815fb306484e14fc4df6c3c23486'
 
@@ -55,7 +59,7 @@ def close_db(conn, cur):
 def initialize_exchanges():
     binance = Binance.Factory(E_BINANCEapiKey, E_BINANCEsecretKey)
     bitfinex = Bitfinex.Factory(A_BITFINEXapiKey, A_BITFINEXsecretKey)
-    bittrex = Bittrex.Factory(E_BITTREXapiKey,E_BITTREXsecretKey)
+    bittrex = Bittrex.Factory(A_BITTREXapiKey,A_BITTREXsecretKey)
     poloniex = Poloniex.Factory(A_POLONIEXapiKey, A_POLONIEXsecretKey)
     cex = Cex.Factory() # Sarà da togliere
     binance.sync()
