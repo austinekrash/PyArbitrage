@@ -262,6 +262,7 @@ binance, bitfinex, bittrex, poloniex, cex = initialize_exchanges()
 conn, cur = open_db()
 intersectionView = fetch_views_db(cur)
 percentages = compute_percentages(intersectionView, cur)
+print(percentages)
 orderded_nop_percentages = remove_sort_duplicates(percentages)
 
 
