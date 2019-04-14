@@ -54,6 +54,8 @@ class Poloniex():
             return [symbol[4:], 'xmr']
         elif(symbol[:4].lower()  == 'usdc'):
             return [symbol[5:], 'usdc']
+        else:
+            -1
 
     def get_price_pairs(self, pair_symbol):
         for key, value in self._json.items():
@@ -158,9 +160,10 @@ class Poloniex():
         #per ora non serve
     
     def is_frozen(self, symbol):
+        symbol = self.find_asset(symbol)[0]
         res = self.pol.returnCurrencies().get(symbol)
         self.costum_print(res)
         if res['disabled'] == 0 and res['delisted'] == 0 and res['frozen'] == 0:
-            return 0
+            return {'withdrawal': False, 'deposit': False}
         else:
-            return 1
+            return {'withdrawal': True, 'deposit': True}

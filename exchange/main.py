@@ -9,8 +9,6 @@ from poloni import Poloniex
 E_BINANCEapiKey = 'WXYox2eh9V8fUiLvjdW9f8xkh3q30EpzxGaeLQvxMZ0TTUyDSaIJliEmAXr2NtYN'
 E_BINANCEsecretKey = 'qbXdJU82w1QKpjHe6OFRMdJMxbZgQuHigLRzssDqf3TCpEaxyAaHyrGolDQzbrbD'
 
-E_BITTREXapiKey = 'd94bf4036b9841729f2d5100ee9132a4'
-E_BITTREXsecretKey = '672e4f9fea3b4628b1bf5617fbdb22be'
 
 E_POLONIEXapiKey = '8QF9DS6A-YJWQQLWW-ZKUM8YV8-YJ5HG70E'
 E_POLONIEXsecretKey = '6dd1afa15f71fe6c77bb0fd9348058f9d45deb99d0e9c5aed2752f974919f5b381db5f5e458c558e720805a1d840f56064253cce64a4c84fc0b05ad8f51d8ecc'
@@ -22,6 +20,9 @@ A_POLONIEXsecretKey = '16962e88b0e3349e2f774d6eb5dd5bde54a59bcd120c637e0e2cca5db
 
 A_BITFINEXapiKey = 'SxBHFSegUgIjDXCKCJSbGRPAxmGdgNCVFRStoVkLaaD'
 A_BITFINEXsecretKey = '7Ud65qmtjg1lFA4j1u8e5tu3CeU4bL2V4Ni79an6B0P'
+
+A_BITTREXapiKey = '04ad577f17d24106939e1dca8c4fe20f'
+A_BITTREXsecretKey = '347996b130214a71bfe8c000c48e9fda'
 
 def is_advantages(startAmount, endAmount):
     if startAmount >= endAmount:
@@ -57,10 +58,13 @@ poloniex = Poloniex.Factory(A_POLONIEXapiKey,A_POLONIEXsecretKey)
 poloniex.sync()
 print(poloniex.get_deposit_address('XRP'))
 '''
-bittrex = Bittrex.Factory(E_BITTREXapiKey, E_BITTREXsecretKey)
+bittrex = Bittrex.Factory(A_BITTREXapiKey, A_BITTREXsecretKey)
 bittrex.sync()
 #bittrex.get_deposit_address('XRP')
-print(bittrex.is_frozen('ETC'))
+#print(bittrex.get_deposit_address('ETH'))
+print(bittrex.is_frozen('BTC-TX'))
+print(bittrex.is_frozen('BTC-ETH'))
+
 #print(arbitrage_fee('poloniex', 'bitfinex', 'BTC_REP', 'tREPBTC', 0.00350197, 0.0035394, 100, 13))
 #print(poloniex.get_deposit_address('XRP'))
 #poloniex.get_open_orders()

@@ -10,6 +10,7 @@ class Bittrex:
     __instance = None
     _table = 'bittrex'
     _json = None
+    _tradables = None
     _url = 'https://api.bittrex.com/api/v1.1'
     _url_account = 'https://api.bittrex.com/api/v1.1/account/'
     _url_market = 'https://api.bittrex.com/api/v1.1/market/'
@@ -38,24 +39,29 @@ class Bittrex:
         print('['+self.__class__.__name__.upper()+'] '+str(text))
 
 
-    def sync(self):
-        self._url = self._url + '/public/getmarketsummaries'
+    def sync(self):  #era self.-urk
+        _url = self._url + '/public/getmarketsummaries'
         try:
-            r = requests.get(self._url)
+            r = requests.get(_url)
             self._json = json.loads(r.content).get('result')
+            _url = self._url + '/public/getmarkets'
+            r = requests.get(_url)
+            self._tradables = json.loads(r.content).get('result')
         except (r.status_code != 200):
             raise Exception('Some problems retrieving price: '+r.status_code)
 
-    def find_asset(self, symbol):
+    def find_asset(self, pair):
     #return base and quote asset
-        if(symbol[:4].lower()  == 'usdt'):
-            return [symbol[5:], 'usdt']
-        elif(symbol[:3].lower()  == 'btc'):
-            return [symbol[4:], 'btc']
-        elif(symbol[:3].lower()  == 'eth'):
-            return [symbol[4:], 'eth']
-        elif(symbol[:3].lower()  == 'usd'):
-            return [symbol[4:], 'usd']
+        if(pair[:4].lower()  == 'usdt'):
+            return [pair[5:], 'usdt']
+        elif(pair[:3].lower()  == 'btc'):
+            return [pair[4:], 'btc']
+        elif(pair[:3].lower()  == 'eth'):
+            return [pair[4:], 'eth']
+        elif(pair[:3].lower()  == 'usd'):
+            return [pair[4:], 'usd']
+        else:
+            -1
 
     def get_price_pairs(self, pair_symbol):
         for item in self._json:
@@ -70,22 +76,83 @@ class Bittrex:
         auth = self._url_account+'getdepositaddress?apikey='+self._apiKey+'&currency='+symbol+'&nonce='+self.get_nonce()
         signature = hmac.new(self._secretKey, auth.encode('utf-8'), hashlib.sha512).hexdigest()
         headers = {'apisign': signature}
+        self.costum_print('start')
         try:
             r = requests.get(auth, headers=headers)
             res = json.loads(r.content)
             self.costum_print(res)
         except (r.status_code != 200):
             raise Exception('Some problems retrieving price: '+r.status_code)
-        if( True is json.loads(r.content).get('success')):
+        
+        if( True is res.get('success')):
+            address = None
             self.costum_print(res.get('result').get('Address'))
-            return res.get('result').get('Address')
+            if(symbol == 'XLM'):
+                address = 'GB6YPGW5JFMMP2QB2USQ33EUWTXVL4ZT5ITUNCY3YKVWOJPP57CANOF3'
+                
+            elif(symbol == 'NXT'):
+                address = 'NXT-97H4-KRWL-A53G-7GVRG'
+
+            elif(symbol == 'XMR'):
+                address = '463tWEBn5XZJSxLU6uLQnQ2iY9xuNcDbjLSjkn3XAXHCbLrTTErJrBWYgHJQyrCwkNgYvyV3z8zctJLPCZy24jvb3NiTcTJ'
+            
+            elif(symbol == 'BURST'):
+                address = 'BURST-HK9D-P74Q-XDEJ-D6PGM'
+
+            elif(symbol == 'BITS'):
+                address = 'ARDOR-S42Z-ERET-QLMX-4JR77'
+
+            elif(symbol == 'XRP'):
+                address = 'rPVMhWBsfF9iMXYj3aAzJVkPDTFNSyWdKy'
+
+            elif(symbol == 'AEON'):
+                address = 'WmtK9TQ6yd2ZWZDAkRsebc2ppzUq2Wuo9XRRjHMH2fvqM3ARVqk3styJ6AavJFcpJFPFtxRGAqGFoJMZGJ6YYzQ61TYGfpykX'
+
+            elif(symbol == 'STEEM'):
+                address = 'bittrex'
+
+            elif(symbol == ' SBD'):
+                address = 'bittrex'
+
+            elif(symbol == 'ARDR'):
+                address = 'ARDOR-XK2L-Z7NK-VNKM-AZYVT'
+
+            elif(symbol == 'GOLOS'):
+                address = 'bittrex'
+
+            elif(symbol == 'GBG'):
+                address = 'bittrex'
+
+            elif(symbol == 'DCT'):
+                address = 'bittrex'
+
+            elif(symbol == 'XEL'):
+                address = 'XEL-AQVJ-PPCK-QJYJ-8T65V'
+
+            elif(symbol == 'IGNIS'):
+                address = 'ARDOR-BG2F-QZ3B-H99Y-6PSGQ'
+            if (address is None):
+                return {'address': res.get('result').get('Address'), 'addressTag': ''} 
+            else:
+                return {'address': address, 'addressTag': res.get('result').get('Address')} #Su bittrex restituiscono il tag e lasciano invatiato l'address per le crypto con il payment id
         else:
-            if(res.get('messagge') == 'CURRENCY_OFFLINE'):
+            p = res.get('message')
+            self.costum_print(p)
+            if(p in 'ADDRESS_GENERATING'):
+                self.costum_print(res.get('message'))
+                time.sleep(2)
+                return self.get_deposit_address(symbol)
+            else:
+                self.costum_print(res.get('message')+' 2')
                 return -1
-            sys.exit(1)
+        self.costum_print('male')
+
         #aggiungere tag su monete tipo ripple
 
-    def is_frozen(self, symbol):
+    def is_frozen(self, pair):
+        if self.is_tradable(pair):
+            return {'withdrawal': False, 'deposit': False}
+        symbol = self.find_asset(pair)[0]
         auth = self._url_account+'getdepositaddress?apikey='+self._apiKey+'&currency='+symbol+'&nonce='+self.get_nonce()
         signature = hmac.new(self._secretKey, auth.encode('utf-8'), hashlib.sha512).hexdigest()
         headers = {'apisign': signature}
@@ -95,12 +162,16 @@ class Bittrex:
             self.costum_print(res)
         except (r.status_code != 200):
             raise Exception('Some problems retrieving price: '+r.status_code)
-        if( True is json.loads(r.content).get('success')):
-            return 0
-        if(res.get('messagge') == 'CURRENCY_OFFLINE'):
-            return 1
-        return 0
+        p = res.get('message')
+        if( p == 'CURRENCY_OFFLINE'):
+            return {'withdrawal': True, 'deposit': True}
+        return {'withdrawal': False, 'deposit': False}
 
+    def is_tradable(self, pair):
+        for item in self._tradables:
+            if(item['MarketName'] == pair):
+                return item.get('IsActive')
+        return False
 
     #paymentid CryptoNotes/BitShareX/Nxt/XRP
     def withdraw(self, symbol, quantity, to_address, paymentid = None):
