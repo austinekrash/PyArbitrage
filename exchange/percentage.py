@@ -8,32 +8,32 @@ from bittrex import Bittrex
 from cex import Cex
 from poloni import Poloniex
 
-E_BINANCEapiKey = 'WXYox2eh9V8fUiLvjdW9f8xkh3q30EpzxGaeLQvxMZ0TTUyDSaIJliEmAXr2NtYN'
-E_BINANCEsecretKey = 'qbXdJU82w1QKpjHe6OFRMdJMxbZgQuHigLRzssDqf3TCpEaxyAaHyrGolDQzbrbD'
+E_BINANCEapiKey = 'key'
+E_BINANCEsecretKey = 'key'
 
-E_BITTREXapiKey = 'd94bf4036b9841729f2d5100ee9132a4'
-E_BITTREXsecretKey = '672e4f9fea3b4628b1bf5617fbdb22be'
+E_BITTREXapiKey = 'key'
+E_BITTREXsecretKey = 'key'
 
-E_POLONIEXapiKey = '8QF9DS6A-YJWQQLWW-ZKUM8YV8-YJ5HG70E'
-E_POLONIEXsecretKey = '6dd1afa15f71fe6c77bb0fd9348058f9d45deb99d0e9c5aed2752f974919f5b381db5f5e458c558e720805a1d840f56064253cce64a4c84fc0b05ad8f51d8ecc'
+E_POLONIEXapiKey = 'key'
+E_POLONIEXsecretKey = 'key'
 
 #Api ale
 
-A_BITTREXapiKey = 'fe357e0ca4bd4cdebd37d06e3773c33f '
-A_BITTREXsecretKey = '9d9c8ebb584d40ffb5dfca4ada0bbf63'
+A_BITTREXapiKey = 'key '
+A_BITTREXsecretKey = 'key'
 
-A_POLONIEXapiKey = '74DRDEIV-2G9W6KXO-QK6FY8Z9-LP1CAT98'
-A_POLONIEXsecretKey = '16962e88b0e3349e2f774d6eb5dd5bde54a59bcd120c637e0e2cca5dbb0f77d93379416ab4e6dbc4fe9116007a548913b1f7815fb306484e14fc4df6c3c23486'
+A_POLONIEXapiKey = 'key'
+A_POLONIEXsecretKey = 'key'
 
-A_BITFINEXapiKey = 'SxBHFSegUgIjDXCKCJSbGRPAxmGdgNCVFRStoVkLaaD'
-A_BITFINEXsecretKey = '7Ud65qmtjg1lFA4j1u8e5tu3CeU4bL2V4Ni79an6B0P'
+A_BITFINEXapiKey = 'key'
+A_BITFINEXsecretKey = 'key'
 
 def costum_print(text):
         print('[PERCENTAGE] '+str(text))   
 
 def open_db():
     try:
-        conn = psycopg2.connect("dbname='arbitraggio' user='ale' host='localhost' password='pippo'")
+        conn = psycopg2.connect("dbname='' user='' host='' password=''")
     except:
         costum_print("I am unable to connect to the database")
         sys.exit(1)

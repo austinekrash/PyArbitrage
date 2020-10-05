@@ -4,7 +4,7 @@ import json
 
 
 try:
-    conn = psycopg2.connect("dbname='arbitraggio' user='ale' host='localhost' password='pippo'")
+    conn = psycopg2.connect("dbname='' user='' host='' password=''")
 except:
     print("I am unable to connect to the database")
 
